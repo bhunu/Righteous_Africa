@@ -1,317 +1,713 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, type ReactNode } from 'react'
 import './App.css'
 
-const slides = [
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const NAV_LINKS = [
+  { label: 'About',    href: '#about'    },
+  { label: 'Services', href: '#services' },
+  { label: 'Packages', href: '#packages' },
+  { label: 'Sectors',  href: '#sectors'  },
+  { label: 'Team',     href: '#team'     },
+  { label: 'Contact',  href: '#contact'  },
+]
+
+const SLIDES = [
   {
-    image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=1200&q=80',
-    caption: 'Executive Business Consultation',
-    sub: 'Senior advisors delivering strategic guidance in a corporate setting',
+    img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80',
+    head: "Building Africa's",
+    accent: 'Next Generation',
+    tail: 'of Enterprises',
+    sub: 'SME Finance, Growth and Advisory Firm dedicated to transforming African entrepreneurship',
   },
   {
-    image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1200&q=80',
-    caption: 'Boardroom Financial Review',
-    sub: 'High-level financial analysis and reporting for enterprise growth',
+    img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80',
+    head: 'Empowering Ideas.',
+    accent: 'Funding Growth.',
+    tail: 'Building Legacies.',
+    sub: 'Connecting visionary entrepreneurs with capital, strategy, and the networks they need to succeed',
   },
   {
-    image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&q=80',
-    caption: 'Corporate Advisory Session',
-    sub: 'Professional teams structuring investment and growth strategies',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=1200&q=80',
-    caption: 'Financial Calculations & Modeling',
-    sub: 'Precision-driven financial modeling for investor-ready businesses',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=1200&q=80',
-    caption: 'Investor Readiness',
-    sub: 'Preparing African ventures to meet and win world-class investors',
+    img: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=1920&q=80',
+    head: 'Strategic Advisory',
+    accent: 'for Bold',
+    tail: 'African Ventures',
+    sub: 'From ideation to investor-ready — we guide every stage of your entrepreneurial journey',
   },
 ]
 
-const services = [
-  { icon: '🚀', title: 'Startup Incubation', desc: 'End-to-end support to launch and scale your startup from ideation to market.' },
-  { icon: '📋', title: 'Business Registration', desc: 'Fast-track company registration and compliance setup across African jurisdictions.' },
-  { icon: '📊', title: 'Accounting & Bookkeeping', desc: 'Professional financial record-keeping and reporting for growing businesses.' },
-  { icon: '📈', title: 'Financial Modeling', desc: 'Data-driven financial projections and models tailored to your business.' },
-  { icon: '💼', title: 'Investor Readiness', desc: 'Prepare pitch decks, due diligence packages, and valuation frameworks.' },
-  { icon: '🌍', title: 'Market Access & Export', desc: 'Open doors to regional and international markets for your products.' },
-  { icon: '💰', title: 'Venture Capital Advisory', desc: 'Connect with the right investors and structure funding rounds successfully.' },
-  { icon: '🎓', title: 'SME Training Programs', desc: 'Capacity-building workshops and mentorship for small and medium enterprises.' },
-  { icon: '📝', title: 'Business Planning', desc: 'Comprehensive business plans that attract funding and guide growth strategy.' },
+const STATS = [
+  { value: '500+',       label: 'Entrepreneurs Supported' },
+  { value: '8',          label: 'Core Service Areas'       },
+  { value: '$2M+',       label: 'Capital Facilitated'      },
+  { value: '360°',       label: 'Business Support'         },
 ]
 
-const sectors = [
-  { icon: '🌾', label: 'Agribusiness' },
-  { icon: '🏥', label: 'Medical Enterprises' },
-  { icon: '🌐', label: 'Export Ventures' },
-  { icon: '💻', label: 'Technology' },
-  { icon: '⚡', label: 'Renewable Energy' },
-  { icon: '⛽', label: 'Fuel & Petroleum' },
-  { icon: '👩‍💼', label: 'Women-Led Businesses' },
-  { icon: '👨‍🎓', label: 'Youth Entrepreneurs' },
+const SERVICES = [
+  { id: 'incubation',   title: 'Business Incubation',          desc: 'End-to-end support to transform raw ideas into viable, investor-ready businesses through mentorship and proven strategic frameworks.' },
+  { id: 'accounting',   title: 'Accounting & Bookkeeping',      desc: 'Professional financial record-keeping, ZIMRA compliance, and reporting that gives you complete clarity over your business finances.' },
+  { id: 'registration', title: 'Company Registration',          desc: 'Fast-track business registration across Zimbabwe and African jurisdictions, building the legal credibility your venture needs.' },
+  { id: 'planning',     title: 'Business Planning',             desc: 'Comprehensive, investor-grade business plans that define your vision, strategy, and competitive advantage with precision.' },
+  { id: 'modeling',     title: 'Financial Modeling',            desc: 'Data-driven financial projections that answer critical growth questions and demonstrate your business economics to investors.' },
+  { id: 'investor',     title: 'Investor Readiness',            desc: 'Pitch decks, due diligence packages, and valuation frameworks that ensure your strongest impression on potential funders.' },
+  { id: 'vc',           title: 'Venture Capital Facilitation',  desc: 'We bridge the gap between ambitious African businesses and the right investors, facilitating connections that unlock growth.' },
+  { id: 'export',       title: 'Export Market Development',     desc: 'Strategic market entry for regional and international expansion, helping African businesses compete on the global stage.' },
+  { id: 'sme',          title: 'SME Advisory',                  desc: 'Dedicated advisory sessions addressing your specific business challenges and setting a clear path for sustainable growth.' },
 ]
 
-const partners = [
-  { icon: '🏦', label: 'Investors' },
-  { icon: '🌐', label: 'Development Agencies' },
-  { icon: '🏛️', label: 'Banks' },
-  { icon: '🎓', label: 'Universities' },
-  { icon: '🤝', label: 'NGOs' },
-  { icon: '🏢', label: 'Corporates' },
-  { icon: '🏛️', label: 'Government' },
+const SERVICE_ICONS: Record<string, ReactNode> = {
+  incubation: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+      <polyline points="2 17 12 22 22 17"/>
+      <polyline points="2 12 12 17 22 12"/>
+    </svg>
+  ),
+  accounting: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2"/>
+      <line x1="9" y1="7" x2="15" y2="7"/>
+      <line x1="9" y1="11" x2="15" y2="11"/>
+      <line x1="9" y1="15" x2="12" y2="15"/>
+    </svg>
+  ),
+  registration: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 11l3 3L22 4"/>
+      <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+    </svg>
+  ),
+  planning: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+  ),
+  modeling: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10"/>
+      <line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6"  y1="20" x2="6"  y2="14"/>
+      <line x1="2"  y1="20" x2="22" y2="20"/>
+    </svg>
+  ),
+  investor: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+      <polyline points="17 6 23 6 23 12"/>
+    </svg>
+  ),
+  vc: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+      <line x1="12" y1="8" x2="12" y2="16"/>
+      <line x1="8"  y1="12" x2="16" y2="12"/>
+    </svg>
+  ),
+  export: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+    </svg>
+  ),
+  sme: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+    </svg>
+  ),
+}
+
+const PACKAGES = [
+  {
+    name: 'Just Start Pack',
+    price: '$220',
+    period: 'Once Off',
+    featured: false,
+    features: [
+      'Company profile + reviews',
+      'Logo design + revisions',
+      'Email registration',
+      'Business chip card',
+      '2 startup receipt books',
+    ],
+  },
+  {
+    name: 'Startup Package',
+    price: '$250',
+    period: '/ Month',
+    featured: false,
+    features: [
+      'Basic accounting',
+      'ZIMRA compliance reminders & support',
+      'Payroll support',
+      'Monthly management accounts',
+    ],
+  },
+  {
+    name: 'SME Growth Package',
+    price: '$400',
+    period: '/ Month',
+    featured: true,
+    features: [
+      'Accounting',
+      'Tax advisory',
+      'Cash flow forecasting',
+      'Budgeting',
+      'Business advisory meetings',
+      'Monthly reports',
+    ],
+  },
+  {
+    name: 'Corporate Finance',
+    price: '$1,000',
+    period: '/ Month',
+    featured: false,
+    features: [
+      'Accounting',
+      'Financial modeling',
+      'Investor readiness',
+      'Fundraising support',
+      'Board reporting',
+      'Expansion strategy',
+      'Monthly reports',
+    ],
+  },
 ]
 
-function HeroSlider() {
-  const [current, setCurrent] = useState(0)
-  const [animating, setAnimating] = useState(false)
+const SECTORS = [
+  'Agribusiness', 'Medical Enterprises', 'Export Ventures', 'Technology',
+  'Renewable Energy', 'Fuel & Petroleum', 'Women-Led Businesses', 'Youth Entrepreneurs',
+  'Manufacturing', 'Real Estate', 'Retail & FMCG', 'Financial Services',
+]
 
-  const goTo = useCallback((index: number) => {
-    if (animating) return
-    setAnimating(true)
-    setCurrent(index)
-    setTimeout(() => setAnimating(false), 700)
-  }, [animating])
+const TEAM = [
+  {
+    name: 'Tendai Moyo',
+    role: 'Founder & Chief Executive Officer',
+    bio: 'Seasoned enterprise development specialist with 15+ years guiding African ventures from concept to capital.',
+    img: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=480&q=80',
+  },
+  {
+    name: 'Rudo Chikwanda',
+    role: 'Chief Financial Officer',
+    bio: 'CPA with extensive experience in financial modeling, investor readiness, and cross-border transactions.',
+    img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&h=480&q=80',
+  },
+  {
+    name: 'Farai Mutasa',
+    role: 'Head of Business Advisory',
+    bio: 'Strategic advisor with a proven track record of scaling startups across Southern and East Africa.',
+    img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&h=480&q=80',
+  },
+  {
+    name: 'Ngozi Adeyemi',
+    role: 'Director, Investor Relations',
+    bio: 'Former investment banker with deep networks across Pan-African capital markets and diaspora investors.',
+    img: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=400&h=480&q=80',
+  },
+  {
+    name: 'Sibusiso Dlamini',
+    role: 'Head of Market Development',
+    bio: 'Export specialist helping African SMEs access transformative regional and international opportunities.',
+    img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=480&q=80',
+  },
+  {
+    name: 'Amara Osei',
+    role: 'Senior Business Analyst',
+    bio: 'Data-driven analyst specialising in financial due diligence and business performance optimisation.',
+    img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&h=480&q=80',
+  },
+]
 
-  const prev = () => goTo((current - 1 + slides.length) % slides.length)
-  const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo])
+// ─── SUB-COMPONENTS ───────────────────────────────────────────────────────────
+
+function LogoMark({ size = 38 }: { size?: number }) {
+  const h = Math.round(size * 0.78)
+  return (
+    <svg width={size} height={h} viewBox="0 0 46 36" fill="none" aria-hidden="true">
+      <path d="M2 33L14 4L26 33"  stroke="#C8102E" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M20 33L32 4L44 33" stroke="#C8102E" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M11 33L23 9L35 33" stroke="#0A0A0A" strokeWidth="3"   strokeLinecap="round" strokeLinejoin="round" opacity="0.82"/>
+    </svg>
+  )
+}
+
+function Check() {
+  return (
+    <svg className="chk" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+    </svg>
+  )
+}
+
+function Tag({ children }: { children: ReactNode }) {
+  return <div className="rae-tag">{children}</div>
+}
+
+// ─── NAVBAR ───────────────────────────────────────────────────────────────────
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    const timer = setInterval(next, 5000)
-    return () => clearInterval(timer)
-  }, [next])
+    const fn = () => setScrolled(window.scrollY > 60)
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
+  }, [])
+
+  const close = () => setOpen(false)
 
   return (
-    <div className="slider">
-      {slides.map((slide, i) => (
-        <div
-          key={i}
-          className={`slide ${i === current ? 'slide-active' : ''}`}
-          style={{ backgroundImage: `url(${slide.image})` }}
+    <header className={`navbar${scrolled ? ' navbar--on' : ''}`}>
+      <div className="navbar-inner">
+        <a href="#" className="nav-logo" onClick={close}>
+          <LogoMark size={38} />
+          <div className="nav-logo-copy">
+            <span className="nav-logo-name">Righteous African</span>
+            <span className="nav-logo-sub">Equities</span>
+          </div>
+        </a>
+
+        <nav className="nav-desktop">
+          {NAV_LINKS.map(l => (
+            <a key={l.label} href={l.href} className="nav-item">{l.label}</a>
+          ))}
+        </nav>
+
+        <a href="#contact" className="nav-cta" onClick={close}>Get Started</a>
+
+        <button
+          className={`nav-burger${open ? ' nav-burger--x' : ''}`}
+          onClick={() => setOpen(o => !o)}
+          aria-label="Toggle menu"
+          aria-expanded={open}
         >
-          <div className="slide-overlay" />
-          <div className="slide-caption">
-            <span className="slide-tag">Financial Sector</span>
-            <p className="slide-title">{slide.caption}</p>
-            <p className="slide-sub">{slide.sub}</p>
+          <span /><span /><span />
+        </button>
+      </div>
+
+      {open && (
+        <nav className="nav-mobile">
+          {NAV_LINKS.map(l => (
+            <a key={l.label} href={l.href} className="nav-m-item" onClick={close}>{l.label}</a>
+          ))}
+          <a href="#contact" className="nav-m-cta" onClick={close}>Get Started</a>
+        </nav>
+      )}
+    </header>
+  )
+}
+
+// ─── HERO ─────────────────────────────────────────────────────────────────────
+
+function Hero() {
+  const [idx, setIdx]     = useState(0)
+  const [out, setOut]     = useState(false)
+
+  const goTo = useCallback((i: number) => {
+    setOut(true)
+    setTimeout(() => { setIdx(i); setOut(false) }, 380)
+  }, [])
+
+  const next = useCallback(() => goTo((idx + 1) % SLIDES.length), [idx, goTo])
+  const prev = () => goTo((idx - 1 + SLIDES.length) % SLIDES.length)
+
+  useEffect(() => {
+    const t = setInterval(next, 7000)
+    return () => clearInterval(t)
+  }, [next])
+
+  const s = SLIDES[idx]
+
+  return (
+    <section className="hero">
+      <div className={`hero-bg${out ? ' hero-bg--fade' : ''}`} style={{ backgroundImage: `url(${s.img})` }} />
+      <div className="hero-veil" />
+
+      <div className="hero-body">
+        <div className="container">
+          <div className="hero-inner">
+            <div className="hero-eyebrow">SME Finance · Growth · Advisory</div>
+            <h1 className="hero-h1">
+              {s.head}<br />
+              <span className="hero-accent">{s.accent}</span><br />
+              {s.tail}
+            </h1>
+            <p className="hero-sub">{s.sub}</p>
+            <div className="hero-btns">
+              <a href="#services" className="btn-hero-solid">Explore Services</a>
+              <a href="#packages" className="btn-hero-ghost">View Packages</a>
+            </div>
           </div>
         </div>
-      ))}
+      </div>
 
-      <button className="slider-arrow arrow-prev" onClick={prev} aria-label="Previous slide">
-        ‹
-      </button>
-      <button className="slider-arrow arrow-next" onClick={next} aria-label="Next slide">
-        ›
-      </button>
+      <button className="hero-arr hero-arr--l" onClick={prev} aria-label="Previous slide">&#8249;</button>
+      <button className="hero-arr hero-arr--r" onClick={next} aria-label="Next slide">&#8250;</button>
 
-      <div className="slider-dots">
-        {slides.map((_, i) => (
+      <div className="hero-dots">
+        {SLIDES.map((_, i) => (
           <button
             key={i}
-            className={`dot ${i === current ? 'dot-active' : ''}`}
+            className={`hero-dot${i === idx ? ' hero-dot--on' : ''}`}
             onClick={() => goTo(i)}
-            aria-label={`Go to slide ${i + 1}`}
+            aria-label={`Slide ${i + 1}`}
           />
         ))}
       </div>
-    </div>
+    </section>
   )
 }
+
+// ─── MAIN ─────────────────────────────────────────────────────────────────────
 
 export default function App() {
   return (
     <div className="site">
+      <Navbar />
+      <Hero />
 
-      {/* NAVBAR */}
-      <nav className="navbar">
-        <div className="nav-inner">
-          <div className="nav-brand">
-            <span className="brand-icon">◈</span>
-            <div className="brand-text">
-              <span className="brand-name">Righteous African</span>
-              <span className="brand-sub">Equities</span>
+      {/* ── STATS STRIP ── */}
+      <div className="stats-strip">
+        {STATS.map((s, i) => (
+          <div key={i} className="stats-cell">
+            <div className="stats-val">{s.value}</div>
+            <div className="stats-lbl">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── ABOUT ── */}
+      <section id="about" className="sec">
+        <div className="container">
+          <div className="about-layout">
+            <div className="about-visual">
+              <img
+                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80"
+                alt="RAE business advisory"
+                className="about-img"
+              />
+              <div className="about-badge">
+                <span className="about-badge-n">10+</span>
+                <span className="about-badge-t">Years of Excellence</span>
+              </div>
+            </div>
+
+            <div className="about-copy">
+              <Tag>Who We Are</Tag>
+              <h2 className="rae-h2">An Enterprise Development &amp; Venture Support Platform</h2>
+              <p className="rae-p">
+                Righteous African Equities (RAE) is a business advisory and startup incubation firm dedicated to empowering entrepreneurs, startups, SMEs, and high-growth ventures across Africa.
+              </p>
+              <p className="rae-p">
+                We bridge the gap between ideas and successful enterprises — providing strategic guidance, financial expertise, operational support, and investor connections that businesses need to survive, grow, and scale sustainably.
+              </p>
+              <div className="pillars">
+                <div className="pillar">
+                  <div className="pillar-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
+                  <div>
+                    <h4>Our Vision</h4>
+                    <p>To become one of Africa's leading enterprise development organizations, building businesses that create lasting generational legacies.</p>
+                  </div>
+                </div>
+                <div className="pillar">
+                  <div className="pillar-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div>
+                    <h4>Our Mission</h4>
+                    <p>To transform innovative African ideas into scalable, sustainable enterprises that create lasting economic impact across the continent.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <ul className="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#sectors">Sectors</a></li>
-            <li><a href="#partners" className="nav-cta">Partner With Us</a></li>
-          </ul>
         </div>
-      </nav>
-
-      {/* HERO */}
-      <section className="hero">
-        <div className="hero-content">
-          <div className="hero-inner">
-            <div className="hero-badge">Africa's Enterprise Development Partner</div>
-            <h1 className="hero-title">
-              Building Africa's<br />
-              <span className="accent-text">Next Generation</span><br />
-              of Enterprises
-            </h1>
-            <p className="hero-desc">
-              Righteous African Equities is a business advisory and startup incubation firm
-              dedicated to empowering entrepreneurs, SMEs, and high-growth ventures across Africa.
-            </p>
-            <div className="hero-actions">
-              <a href="#services" className="btn-primary">Explore Our Services</a>
-              <a href="#partners" className="btn-outline">Partner With Us</a>
-            </div>
-          </div>
-        </div>
-        <HeroSlider />
       </section>
 
-      {/* STATS BAR */}
-      <div className="stats-bar">
-        <div className="stat">
-          <span className="stat-number">8+</span>
-          <span className="stat-label">Core Services</span>
+      {/* ── SERVICES ── */}
+      <section id="services" className="sec sec--gray">
+        <div className="container">
+          <div className="sec-hd">
+            <Tag>What We Offer</Tag>
+            <h2 className="rae-h2">Comprehensive Business Services</h2>
+            <p className="sec-lead">From inception to global expansion — we support every stage of your entrepreneurial journey.</p>
+          </div>
+          <div className="srv-grid">
+            {SERVICES.map(s => (
+              <div key={s.id} className="srv-card">
+                <div className="srv-icon">{SERVICE_ICONS[s.id]}</div>
+                <h3 className="srv-title">{s.title}</h3>
+                <p className="srv-desc">{s.desc}</p>
+                <span className="srv-more">
+                  Learn more
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="stat-divider"></div>
-        <div className="stat">
-          <span className="stat-number">8</span>
-          <span className="stat-label">Target Sectors</span>
-        </div>
-        <div className="stat-divider"></div>
-        <div className="stat">
-          <span className="stat-number">Pan-African</span>
-          <span className="stat-label">Reach & Vision</span>
-        </div>
-        <div className="stat-divider"></div>
-        <div className="stat">
-          <span className="stat-number">360°</span>
-          <span className="stat-label">Business Support</span>
+      </section>
+
+      {/* ── COMPANY SETUP OFFER ── */}
+      <div className="offer">
+        <div className="container">
+          <div className="offer-inner">
+            <div className="offer-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="30" height="30">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <div className="offer-copy">
+              <h3>Company Setup in Zimbabwe</h3>
+              <p>Get fully registered &amp; compliant — ZIG &amp; USD payments accepted</p>
+              <div className="offer-chips">
+                <span>✓ Company registration</span>
+                <span>✓ Free website</span>
+                <span>✓ Free tax clearance certificate</span>
+              </div>
+            </div>
+            <div className="offer-price-col">
+              <div className="offer-price">
+                <span className="offer-amt">$250</span>
+                <span className="offer-per">Once Off</span>
+              </div>
+              <a href="#contact" className="offer-btn">Get Started</a>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ABOUT */}
-      <section id="about" className="section about-section">
+      {/* ── PACKAGES ── */}
+      <section id="packages" className="sec">
         <div className="container">
-          <div className="section-label">Who We Are</div>
-          <h2 className="section-title">An Enterprise Development & Venture Support Platform</h2>
-          <p className="section-desc">
-            Righteous African Equities is an enterprise development and venture support platform
-            focused on supporting startups and SMEs through strategic business advisory,
-            incubation, and investment facilitation services.
-          </p>
-          <div className="vision-mission">
-            <div className="vm-card vision-card">
-              <div className="vm-icon">🔭</div>
-              <h3>Our Vision</h3>
-              <p>To become Africa's leading enterprise incubation and venture development ecosystem.</p>
-            </div>
-            <div className="vm-card mission-card">
-              <div className="vm-icon">🎯</div>
-              <h3>Our Mission</h3>
-              <p>To empower African entrepreneurs with the tools, networks, and financial systems required to build globally competitive businesses.</p>
-            </div>
+          <div className="sec-hd">
+            <Tag>Pricing</Tag>
+            <h2 className="rae-h2">Packages Tailored to Your Stage</h2>
+            <p className="sec-lead">Transparent, structured pricing designed for every level of business growth.</p>
           </div>
-        </div>
-      </section>
-
-      {/* SERVICES */}
-      <section id="services" className="section services-section">
-        <div className="container">
-          <div className="section-label">What We Offer</div>
-          <h2 className="section-title">Our Services</h2>
-          <p className="section-desc">
-            Comprehensive support across every stage of your business journey — from inception to expansion.
-          </p>
-          <div className="services-grid">
-            {services.map((s) => (
-              <div key={s.title} className="service-card">
-                <div className="service-icon">{s.icon}</div>
-                <h3>{s.title}</h3>
-                <p>{s.desc}</p>
-                <div className="card-accent"></div>
+          <div className="pkg-grid">
+            {PACKAGES.map(pkg => (
+              <div key={pkg.name} className={`pkg-card${pkg.featured ? ' pkg-card--star' : ''}`}>
+                {pkg.featured && <div className="pkg-badge">Most Popular</div>}
+                <div className="pkg-head">
+                  <h3 className="pkg-name">{pkg.name}</h3>
+                  <div className="pkg-price">
+                    <span className="pkg-amt">{pkg.price}</span>
+                    <span className="pkg-per">{pkg.period}</span>
+                  </div>
+                </div>
+                <ul className="pkg-feats">
+                  {pkg.features.map(f => (
+                    <li key={f}><Check /><span>{f}</span></li>
+                  ))}
+                </ul>
+                <a href="#contact" className={`pkg-btn${pkg.featured ? ' pkg-btn--fill' : ''}`}>
+                  Get Started
+                </a>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SECTORS */}
-      <section id="sectors" className="section sectors-section">
+      {/* ── SECTORS ── */}
+      <section id="sectors" className="sec sec--gray">
         <div className="container">
-          <div className="section-label">Who We Serve</div>
-          <h2 className="section-title">Sectors We Support</h2>
-          <p className="section-desc">We partner with businesses across diverse and high-impact industries driving Africa's growth.</p>
-          <div className="sectors-grid">
-            {sectors.map((s) => (
-              <div key={s.label} className="sector-chip">
-                <span className="sector-icon">{s.icon}</span>
-                <span>{s.label}</span>
+          <div className="sec-hd">
+            <Tag>Who We Serve</Tag>
+            <h2 className="rae-h2">Sectors We Support</h2>
+            <p className="sec-lead">We partner with businesses across diverse, high-impact industries driving Africa's economic transformation.</p>
+          </div>
+          <div className="sec-grid">
+            {SECTORS.map(s => (
+              <div key={s} className="sec-tile">
+                <div className="sec-tile-dot" />
+                <span>{s}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* PARTNERS */}
-      <section id="partners" className="section partners-section">
+      {/* ── TEAM ── */}
+      <section id="team" className="sec">
         <div className="container">
-          <div className="section-label">Collaborate With Us</div>
-          <h2 className="section-title">Partner With Us</h2>
-          <p className="section-desc">
-            Together, we can accelerate entrepreneurship and economic growth across Africa.
-            We welcome partnerships with:
-          </p>
-          <div className="partners-grid">
-            {partners.map((p) => (
-              <div key={p.label} className="partner-card">
-                <span className="partner-icon">{p.icon}</span>
-                <span className="partner-label">{p.label}</span>
-              </div>
-            ))}
+          <div className="sec-hd">
+            <Tag>Our People</Tag>
+            <h2 className="rae-h2">Leadership Team</h2>
+            <p className="sec-lead">Experienced professionals dedicated to transforming African entrepreneurship into global impact.</p>
           </div>
-          <div className="partner-cta">
-            <p>Ready to build Africa's future together?</p>
-            <a href="mailto:info@righteousafricanequities.com" className="btn-primary">Get In Touch</a>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-top">
-            <div className="footer-brand">
-              <div className="nav-brand">
-                <span className="brand-icon">◈</span>
-                <div className="brand-text">
-                  <span className="brand-name">Righteous African</span>
-                  <span className="brand-sub">Equities</span>
+          <div className="team-grid">
+            {TEAM.map(m => (
+              <div key={m.name} className="team-card">
+                <div className="team-photo-wrap">
+                  <img src={m.img} alt={m.name} className="team-photo" />
+                  <div className="team-photo-overlay" />
+                </div>
+                <div className="team-info">
+                  <h3 className="team-name">{m.name}</h3>
+                  <div className="team-role">{m.role}</div>
+                  <p className="team-bio">{m.bio}</p>
                 </div>
               </div>
-              <p className="footer-tagline">Empowering Africa's next generation of entrepreneurs and enterprises.</p>
+            ))}
+          </div>
+          <p className="team-note">* Placeholder profiles — please replace with actual RAE leadership photos and biographies.</p>
+        </div>
+      </section>
+
+      {/* ── CTA BAND ── */}
+      <div className="cta-band">
+        <div className="container">
+          <div className="cta-band-inner">
+            <div>
+              <h2>Ready to Build Tomorrow, Together?</h2>
+              <p>Let's turn your vision into Africa's next great enterprise.</p>
             </div>
-            <div className="footer-links">
+            <div className="cta-band-btns">
+              <a href="#contact" className="btn-cta-w">Get In Touch</a>
+              <a href="tel:+263776283368" className="btn-cta-g">+263 776 283 368</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── CONTACT ── */}
+      <section id="contact" className="sec">
+        <div className="container">
+          <div className="contact-layout">
+            <div className="contact-info">
+              <Tag>Contact Us</Tag>
+              <h2 className="rae-h2">Let's Build Together</h2>
+              <p className="rae-p">
+                Whether you're a startup looking to launch, an SME seeking growth capital, or an investor exploring African opportunities — we're ready to partner with you.
+              </p>
+              <div className="contact-rows">
+                <div className="contact-row">
+                  <div className="c-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" width="18" height="18"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.88 19.79 19.79 0 01.06 1.28 2 2 0 012.03 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  </div>
+                  <div>
+                    <div className="c-label">Phone</div>
+                    <a href="tel:+263776283368" className="c-val">+263 776 283 368</a>
+                  </div>
+                </div>
+                <div className="contact-row">
+                  <div className="c-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" width="18" height="18"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  </div>
+                  <div>
+                    <div className="c-label">Email</div>
+                    <a href="mailto:raewealth@gmail.com" className="c-val">raewealth@gmail.com</a>
+                  </div>
+                </div>
+                <div className="contact-row">
+                  <div className="c-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" width="18" height="18"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <div>
+                    <div className="c-label">Operations</div>
+                    <div className="c-val">Zimbabwe &amp; Pan-African</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="contact-form-panel">
+              <h3>Send Us a Message</h3>
+              <form onSubmit={e => e.preventDefault()}>
+                <div className="form-row">
+                  <div className="fg">
+                    <label>First Name</label>
+                    <input type="text" placeholder="John" />
+                  </div>
+                  <div className="fg">
+                    <label>Last Name</label>
+                    <input type="text" placeholder="Doe" />
+                  </div>
+                </div>
+                <div className="fg">
+                  <label>Email Address</label>
+                  <input type="email" placeholder="john@example.com" />
+                </div>
+                <div className="fg">
+                  <label>Service of Interest</label>
+                  <select>
+                    <option value="">Select a service…</option>
+                    {SERVICES.map(s => <option key={s.id}>{s.title}</option>)}
+                  </select>
+                </div>
+                <div className="fg">
+                  <label>Message</label>
+                  <textarea rows={4} placeholder="Tell us about your business and how we can help…" />
+                </div>
+                <button type="submit" className="form-submit">Send Message</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-layout">
+            <div className="footer-brand">
+              <a href="#" className="nav-logo">
+                <LogoMark size={34} />
+                <div className="nav-logo-copy">
+                  <span className="nav-logo-name" style={{ color: '#fff' }}>Righteous African</span>
+                  <span className="nav-logo-sub">Equities</span>
+                </div>
+              </a>
+              <p className="footer-tag">
+                Empowering Africa's next generation of entrepreneurs and enterprises. Building legacies that last.
+              </p>
+              <div className="footer-contacts">
+                <a href="tel:+263776283368">+263 776 283 368</a>
+                <a href="mailto:raewealth@gmail.com">raewealth@gmail.com</a>
+              </div>
+            </div>
+
+            <div className="footer-col">
               <h4>Company</h4>
               <a href="#about">About Us</a>
-              <a href="#services">Services</a>
+              <a href="#team">Our Team</a>
               <a href="#sectors">Sectors</a>
-              <a href="#partners">Partner With Us</a>
+              <a href="#contact">Contact</a>
             </div>
-            <div className="footer-links">
+
+            <div className="footer-col">
               <h4>Services</h4>
-              <a href="#services">Startup Incubation</a>
-              <a href="#services">Business Registration</a>
+              <a href="#services">Business Incubation</a>
+              <a href="#services">Accounting &amp; Bookkeeping</a>
+              <a href="#services">Company Registration</a>
               <a href="#services">Financial Modeling</a>
               <a href="#services">Investor Readiness</a>
             </div>
-            <div className="footer-contact">
-              <h4>Contact</h4>
-              <p>📧 info@righteousafricanequities.com</p>
-              <p>🌍 Pan-African Operations</p>
+
+            <div className="footer-col">
+              <h4>Packages</h4>
+              <a href="#packages">Just Start Pack</a>
+              <a href="#packages">Startup Package</a>
+              <a href="#packages">SME Growth Package</a>
+              <a href="#packages">Corporate Finance</a>
             </div>
           </div>
+
           <div className="footer-bottom">
-            <p>© {new Date().getFullYear()} Righteous African Equities. All rights reserved.</p>
-            <p className="footer-motto">Building Africa's Next Generation of Enterprises</p>
+            <p>&copy; {new Date().getFullYear()} Righteous African Equities. All rights reserved.</p>
+            <p className="footer-motto">"....building Africa's Next Generation of Enterprises"</p>
           </div>
         </div>
       </footer>
