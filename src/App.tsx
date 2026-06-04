@@ -6,6 +6,7 @@ import './App.css'
 const NAV_LINKS = [
   { label: 'About',    href: '#about'    },
   { label: 'Services', href: '#services' },
+  { label: 'Diaspora', href: '#diaspora' },
   { label: 'Packages', href: '#packages' },
   { label: 'Sectors',  href: '#sectors'  },
   { label: 'Team',     href: '#team'     },
@@ -222,6 +223,113 @@ const TEAM = [
     bio: 'Data-driven analyst specialising in financial due diligence and business performance optimisation.',
     img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&h=480&q=80',
   },
+]
+
+// ─── DIASPORA DATA ────────────────────────────────────────────────────────────
+
+const DIASPORA_SERVICES = [
+  { id: 'dreg',    title: 'Company Registration & Business Setup',   desc: 'Full business registration across Zimbabwe and African jurisdictions — handled remotely, wherever you are in the world.' },
+  { id: 'dacc',    title: 'Accounting & Bookkeeping Services',        desc: 'Professional financial record-keeping, ZIMRA compliance, and transparent monthly reporting you can review from any timezone.' },
+  { id: 'dtax',    title: 'Tax & Compliance Advisory',                desc: 'Stay fully compliant with local regulations. We handle ZIMRA submissions, returns, and statutory requirements on your behalf.' },
+  { id: 'dinv',    title: 'Investment Structuring & Venture Support', desc: 'We structure your diaspora capital into safe, compliant investment vehicles aligned with your goals and risk profile.' },
+  { id: 'dagri',   title: 'Agribusiness & Export Consulting',         desc: 'End-to-end support for agricultural ventures — from land identification and input sourcing to export market access.' },
+  { id: 'dplan',   title: 'Business Plans & Feasibility Studies',     desc: 'Rigorous, investor-grade business plans and feasibility reports to validate opportunities before you commit capital.' },
+  { id: 'dmarket', title: 'Market Research & Opportunity Sourcing',   desc: 'On-the-ground intelligence and curated opportunity reports so you invest with verified facts — not assumptions.' },
+  { id: 'ddue',    title: 'Property & Project Due Diligence',         desc: 'Independent verification and risk assessment of real estate, projects, and partners before you make any commitment.' },
+  { id: 'dsme',    title: 'SME Growth & Financial Advisory',          desc: 'Strategic financial guidance to grow your Zimbabwe-based business with professional accountability and board-level reporting.' },
+]
+
+const DIASPORA_ICONS: Record<string, ReactNode> = {
+  dreg: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="7" width="20" height="14" rx="2"/>
+      <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+    </svg>
+  ),
+  dacc: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+      <line x1="10" y1="9"  x2="8" y2="9"/>
+    </svg>
+  ),
+  dtax: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <polyline points="9 12 11 14 15 10"/>
+    </svg>
+  ),
+  dinv: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="5"  r="2"/>
+      <circle cx="5"  cy="19" r="2"/>
+      <circle cx="19" cy="19" r="2"/>
+      <line x1="12" y1="7" x2="5"  y2="17"/>
+      <line x1="12" y1="7" x2="19" y2="17"/>
+      <line x1="5"  y1="19" x2="19" y2="19"/>
+    </svg>
+  ),
+  dagri: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 8C8 10 5.9 16.17 3.82 22"/>
+      <path d="M9.1 6.4C12 5.8 17.7 8 22 2c-3 4.3-8.6 6.8-12.9 4.4z"/>
+    </svg>
+  ),
+  dplan: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2"/>
+      <line x1="9" y1="7"  x2="15" y2="7"/>
+      <line x1="9" y1="11" x2="15" y2="11"/>
+      <line x1="9" y1="15" x2="12" y2="15"/>
+    </svg>
+  ),
+  dmarket: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8"/>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      <polyline points="8 11 10 13 14 9"/>
+    </svg>
+  ),
+  ddue: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 11l3 3L22 4"/>
+      <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+    </svg>
+  ),
+  dsme: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+      <polyline points="17 6 23 6 23 12"/>
+    </svg>
+  ),
+}
+
+const DIASPORA_WHY = [
+  { title: 'Trusted Professionals',     desc: 'Zimbabwe-based business professionals with verifiable track records and real, on-the-ground accountability.' },
+  { title: 'Transparent Reporting',     desc: 'Regular, detailed reports so you always know exactly how your capital and investments are performing.' },
+  { title: 'Local Market Intelligence', desc: 'Deep, on-the-ground knowledge of Zimbabwe and African markets that no remote analyst can replicate.' },
+  { title: 'Remote-First Support',      desc: 'All services fully accessible from the UK, USA, Canada, UAE, South Africa, and beyond — built for the diaspora.' },
+  { title: 'Strong African Networks',   desc: 'Established connections across agriculture, finance, trade, and SME sectors spanning the continent.' },
+]
+
+const DIASPORA_OPPS = [
+  { title: 'Fresh Produce Export Projects',      desc: "Access Zimbabwe's fertile agricultural sector and fast-growing regional export markets with expert structuring." },
+  { title: 'Poultry & Agribusiness Investments', desc: 'Scalable agribusiness opportunities with strong local demand, consistent returns, and export potential.' },
+  { title: 'Energy & Petroleum Opportunities',   desc: "Participate in Zimbabwe's expanding renewable energy and fuel distribution sector with vetted partners." },
+  { title: 'SME Expansion & Partnerships',       desc: 'Co-invest in established, growth-ready SMEs seeking diaspora capital to reach their next level.' },
+  { title: 'Venture Capital & Startup Support',  desc: "Back Africa's next generation of innovative startups through our expert deal-sourcing and due diligence." },
+  { title: 'Trade Facilitation Across Africa',   desc: 'Leverage pan-African trade corridors and regional market opportunities with our established networks.' },
+]
+
+const DIASPORA_OPP_ICONS: ReactNode[] = [
+  <svg key="0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8C8 10 5.9 16.17 3.82 22"/><path d="M9.1 6.4C12 5.8 17.7 8 22 2c-3 4.3-8.6 6.8-12.9 4.4z"/></svg>,
+  <svg key="1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>,
+  <svg key="2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+  <svg key="3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>,
+  <svg key="4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>,
+  <svg key="5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>,
 ]
 
 // ─── SUB-COMPONENTS ───────────────────────────────────────────────────────────
@@ -487,6 +595,116 @@ export default function App() {
         </div>
       </div>
 
+      {/* ── DIASPORA ── */}
+      <section id="diaspora" className="dsp-section">
+
+        <div className="dsp-banner">
+          <div className="container">
+            <div className="dsp-banner-inner">
+              <div className="dsp-banner-copy">
+                <div className="dsp-eyebrow">Diaspora Investment &amp; Business Solutions</div>
+                <h2 className="dsp-h2">
+                  Invest Back Home<br />
+                  <span className="dsp-accent">With Confidence</span>
+                </h2>
+                <p className="dsp-sub">
+                  We help Africans in the diaspora build, invest, and grow businesses back home — safely, professionally, and with full accountability. Whether you're in the UK, USA, Canada, Australia, UAE, or Europe, we're your trusted partner on the ground.
+                </p>
+                <div className="dsp-countries">
+                  {['UK', 'USA', 'Canada', 'Australia', 'UAE', 'South Africa', 'Europe'].map(c => (
+                    <span key={c} className="dsp-chip">{c}</span>
+                  ))}
+                </div>
+                <a href="#contact" className="dsp-banner-btn">Book a Consultation</a>
+              </div>
+              <div className="dsp-metrics">
+                {[
+                  { value: '7+',   label: 'Countries Served' },
+                  { value: '100%', label: 'Remote Capable'   },
+                  { value: '9',    label: 'Core Services'    },
+                  { value: '10+',  label: 'Years Experience' },
+                ].map((m, i) => (
+                  <div key={i} className="dsp-metric">
+                    <span className="dsp-metric-val">{m.value}</span>
+                    <span className="dsp-metric-lbl">{m.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="sec sec--gray">
+          <div className="container">
+            <div className="sec-hd">
+              <Tag>What We Do</Tag>
+              <h2 className="rae-h2">End-to-End Diaspora Services</h2>
+              <p className="sec-lead">From business registration to investment structuring — everything managed professionally, wherever you are in the world.</p>
+            </div>
+            <div className="srv-grid">
+              {DIASPORA_SERVICES.map(s => (
+                <div key={s.id} className="srv-card">
+                  <div className="srv-icon">{DIASPORA_ICONS[s.id]}</div>
+                  <h3 className="srv-title">{s.title}</h3>
+                  <p className="srv-desc">{s.desc}</p>
+                  <span className="srv-more">
+                    Enquire now
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="dsp-why">
+          <div className="container">
+            <div className="sec-hd">
+              <Tag>Why Diaspora Clients Choose Us</Tag>
+              <h2 className="rae-h2">Built for Africans Abroad</h2>
+              <p className="sec-lead">Five reasons the diaspora trusts Righteous African Equities to manage their investments back home.</p>
+            </div>
+            <div className="dsp-why-grid">
+              {DIASPORA_WHY.map((w, i) => (
+                <div key={i} className="dsp-why-card">
+                  <div className="dsp-why-num">0{i + 1}</div>
+                  <h4 className="dsp-why-title">{w.title}</h4>
+                  <p className="dsp-why-desc">{w.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="sec sec--gray">
+          <div className="container">
+            <div className="sec-hd">
+              <Tag>Opportunities We Facilitate</Tag>
+              <h2 className="rae-h2">Where Your Capital Can Grow</h2>
+              <p className="sec-lead">Curated investment opportunities across Zimbabwe and the broader African market — sourced, vetted, and structured by our team.</p>
+            </div>
+            <div className="dsp-opp-grid">
+              {DIASPORA_OPPS.map((o, i) => (
+                <div key={i} className="dsp-opp-card">
+                  <div className="dsp-opp-icon">{DIASPORA_OPP_ICONS[i]}</div>
+                  <h4 className="dsp-opp-title">{o.title}</h4>
+                  <p className="dsp-opp-desc">{o.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="dsp-quote">
+          <div className="container">
+            <blockquote className="dsp-quote-text">"Connecting Diaspora Capital to African Growth Opportunities."</blockquote>
+            <p className="dsp-quote-sub">Your vision. Our expertise. Africa's future.</p>
+            <a href="#contact" className="btn-cta-w">Start Your Investment Journey</a>
+          </div>
+        </div>
+
+      </section>
+
       {/* ── PACKAGES ── */}
       <section id="packages" className="sec">
         <div className="container">
@@ -682,6 +900,7 @@ export default function App() {
             <div className="footer-col">
               <h4>Company</h4>
               <a href="#about">About Us</a>
+              <a href="#diaspora">Diaspora Solutions</a>
               <a href="#team">Our Team</a>
               <a href="#sectors">Sectors</a>
               <a href="#contact">Contact</a>
