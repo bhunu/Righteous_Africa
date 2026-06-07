@@ -1,16 +1,62 @@
-import { useState, useEffect, useCallback, type ReactNode } from 'react'
+import { useState, useEffect, useCallback, useRef, type ReactNode } from 'react'
 import './App.css'
+import BlogSection from './components/BlogSection'
+import OpportunitiesSection from './components/OpportunitiesSection'
+import AdminPanel from './components/AdminPanel'
+import type { SiteContent } from './data/types'
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
-const NAV_LINKS = [
-  { label: 'About',    href: '#about'    },
-  { label: 'Services', href: '#services' },
-  { label: 'Diaspora', href: '#diaspora' },
-  { label: 'Packages', href: '#packages' },
-  { label: 'Sectors',  href: '#sectors'  },
-  { label: 'Team',     href: '#team'     },
-  { label: 'Contact',  href: '#contact'  },
+interface NavChild { label: string; href: string; desc?: string }
+interface NavGroup  { label: string; href?: string; wide?: boolean; children?: NavChild[] }
+
+const NAV_LINKS: NavGroup[] = [
+  {
+    label: 'Company',
+    children: [
+      { label: 'About RAE',         href: '#about',   desc: 'Our story, vision & mission'      },
+      { label: 'Leadership Team',   href: '#team',    desc: 'Meet our expert advisors'          },
+      { label: 'Sectors We Serve',  href: '#sectors', desc: 'Industries we work across'         },
+    ],
+  },
+  {
+    label: 'Services',
+    wide: true,
+    children: [
+      { label: 'Business Incubation',       href: '#services', desc: 'Idea to investor-ready'         },
+      { label: 'Accounting & Bookkeeping',  href: '#services', desc: 'Financial clarity & compliance' },
+      { label: 'Company Registration',      href: '#services', desc: 'Fast-track legal setup'         },
+      { label: 'Business Planning',         href: '#services', desc: 'Investor-grade plans'           },
+      { label: 'Financial Modeling',        href: '#services', desc: 'Data-driven projections'        },
+      { label: 'Investor Readiness',        href: '#services', desc: 'Pitch decks & due diligence'   },
+      { label: 'Venture Capital',           href: '#services', desc: 'Connect with funders'           },
+      { label: 'Export Development',        href: '#services', desc: 'Access global markets'          },
+      { label: 'SME Advisory',              href: '#services', desc: 'Strategic business guidance'    },
+    ],
+  },
+  {
+    label: 'Diaspora',
+    children: [
+      { label: 'Invest Back Home',  href: '#diaspora-overview',  desc: 'For Africans living abroad'  },
+      { label: 'Diaspora Services', href: '#diaspora-services',  desc: 'Managed remotely, anywhere'  },
+      { label: 'Why Choose RAE',    href: '#diaspora-why',       desc: 'Trusted by diaspora clients' },
+    ],
+  },
+  {
+    label: 'Invest',
+    children: [
+      { label: 'Packages & Pricing', href: '#packages',      desc: 'Transparent, structured pricing' },
+      { label: 'Live Opportunities', href: '#opportunities', desc: 'Vetted investment deals'          },
+    ],
+  },
+  {
+    label: 'Insights',
+    children: [
+      { label: 'Blog & Articles',      href: '#blog',          desc: 'Expert perspectives & ideas' },
+      { label: 'Market Opportunities', href: '#opportunities', desc: 'Where your capital can grow' },
+    ],
+  },
+  { label: 'Contact', href: '#contact' },
 ]
 
 const SLIDES = [
@@ -191,37 +237,37 @@ const TEAM = [
     name: 'Tendai Moyo',
     role: 'Founder & Chief Executive Officer',
     bio: 'Seasoned enterprise development specialist with 15+ years guiding African ventures from concept to capital.',
-    img: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=480&q=80',
+    img: 'https://images.unsplash.com/photo-1495603889488-42d1d66e5523?auto=format&fit=crop&w=400&h=480&q=80',
   },
   {
     name: 'Rudo Chikwanda',
     role: 'Chief Financial Officer',
     bio: 'CPA with extensive experience in financial modeling, investor readiness, and cross-border transactions.',
-    img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&h=480&q=80',
+    img: 'https://images.unsplash.com/photo-1573497620013-7f7660da1a48?auto=format&fit=crop&w=400&h=480&q=80',
   },
   {
     name: 'Farai Mutasa',
     role: 'Head of Business Advisory',
     bio: 'Strategic advisor with a proven track record of scaling startups across Southern and East Africa.',
-    img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&h=480&q=80',
+    img: 'https://images.unsplash.com/photo-1589114207353-1fc98a11070b?auto=format&fit=crop&w=400&h=480&q=80',
   },
   {
     name: 'Ngozi Adeyemi',
     role: 'Director, Investor Relations',
     bio: 'Former investment banker with deep networks across Pan-African capital markets and diaspora investors.',
-    img: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=400&h=480&q=80',
+    img: 'https://images.unsplash.com/photo-1636144896336-b056be4a8dfe?auto=format&fit=crop&w=400&h=480&q=80',
   },
   {
     name: 'Sibusiso Dlamini',
     role: 'Head of Market Development',
     bio: 'Export specialist helping African SMEs access transformative regional and international opportunities.',
-    img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=480&q=80',
+    img: 'https://images.unsplash.com/photo-1528901166007-3784c7dd3653?auto=format&fit=crop&w=400&h=480&q=80',
   },
   {
     name: 'Amara Osei',
     role: 'Senior Business Analyst',
     bio: 'Data-driven analyst specialising in financial due diligence and business performance optimisation.',
-    img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&h=480&q=80',
+    img: 'https://images.unsplash.com/photo-1573497619951-6c9477fb83b4?auto=format&fit=crop&w=400&h=480&q=80',
   },
 ]
 
@@ -359,22 +405,46 @@ function Tag({ children }: { children: ReactNode }) {
 
 // ─── NAVBAR ───────────────────────────────────────────────────────────────────
 
+function Chevron() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor"
+      strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M2 4l4 4 4-4" />
+    </svg>
+  )
+}
+
 function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
+  const [scrolled,       setScrolled]       = useState(false)
+  const [mobileOpen,     setMobileOpen]     = useState(false)
+  const [activeDD,       setActiveDD]       = useState<string | null>(null)
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null)
+  const headerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 60)
-    window.addEventListener('scroll', fn, { passive: true })
-    return () => window.removeEventListener('scroll', fn)
+    const onScroll = () => setScrolled(window.scrollY > 60)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const close = () => setOpen(false)
+  useEffect(() => {
+    const onDown = (e: MouseEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        setActiveDD(null)
+      }
+    }
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+  }, [])
+
+  const closeMobile = () => { setMobileOpen(false); setMobileExpanded(null) }
 
   return (
-    <header className={`navbar${scrolled ? ' navbar--on' : ''}`}>
+    <header ref={headerRef} className={`navbar${scrolled ? ' navbar--on' : ''}`}>
       <div className="navbar-inner">
-        <a href="#" className="nav-logo" onClick={close}>
+
+        {/* Logo */}
+        <a href="#" className="nav-logo" onClick={closeMobile}>
           <LogoMark size={38} />
           <div className="nav-logo-copy">
             <span className="nav-logo-name">Righteous African</span>
@@ -382,30 +452,89 @@ function Navbar() {
           </div>
         </a>
 
+        {/* Desktop nav */}
         <nav className="nav-desktop">
-          {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.href} className="nav-item">{l.label}</a>
-          ))}
+          {NAV_LINKS.map(link =>
+            link.children ? (
+              <div
+                key={link.label}
+                className="nav-dd-wrap"
+                onMouseEnter={() => setActiveDD(link.label)}
+                onMouseLeave={() => setActiveDD(null)}
+              >
+                <button
+                  className={`nav-item nav-item--dd${activeDD === link.label ? ' nav-item--open' : ''}`}
+                  onClick={() => setActiveDD(p => p === link.label ? null : link.label)}
+                  aria-expanded={activeDD === link.label}
+                >
+                  {link.label}
+                  <Chevron />
+                </button>
+
+                <div className={`nav-dd${link.wide ? ' nav-dd--wide' : ''}${activeDD === link.label ? ' nav-dd--show' : ''}`}>
+                  <div className={`nav-dd-inner${link.wide ? ' nav-dd-inner--grid' : ''}`}>
+                    {link.children.map(child => (
+                      <a key={child.label} href={child.href} className="nav-dd-item"
+                        onClick={() => setActiveDD(null)}>
+                        <span className="nav-dd-lbl">{child.label}</span>
+                        {child.desc && <span className="nav-dd-desc">{child.desc}</span>}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <a key={link.label} href={link.href} className="nav-item"
+                onClick={() => setActiveDD(null)}>
+                {link.label}
+              </a>
+            )
+          )}
         </nav>
 
-        <a href="#contact" className="nav-cta" onClick={close}>Get Started</a>
+        <a href="#contact" className="nav-cta" onClick={closeMobile}>Get Started</a>
 
         <button
-          className={`nav-burger${open ? ' nav-burger--x' : ''}`}
-          onClick={() => setOpen(o => !o)}
+          className={`nav-burger${mobileOpen ? ' nav-burger--x' : ''}`}
+          onClick={() => setMobileOpen(o => !o)}
           aria-label="Toggle menu"
-          aria-expanded={open}
+          aria-expanded={mobileOpen}
         >
           <span /><span /><span />
         </button>
       </div>
 
-      {open && (
+      {/* Mobile nav */}
+      {mobileOpen && (
         <nav className="nav-mobile">
-          {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.href} className="nav-m-item" onClick={close}>{l.label}</a>
-          ))}
-          <a href="#contact" className="nav-m-cta" onClick={close}>Get Started</a>
+          {NAV_LINKS.map(link =>
+            link.children ? (
+              <div key={link.label} className="nav-m-group">
+                <button
+                  className={`nav-m-item nav-m-item--dd${mobileExpanded === link.label ? ' nav-m-item--open' : ''}`}
+                  onClick={() => setMobileExpanded(p => p === link.label ? null : link.label)}
+                >
+                  {link.label}
+                  <Chevron />
+                </button>
+                {mobileExpanded === link.label && (
+                  <div className="nav-m-sub">
+                    {link.children.map(child => (
+                      <a key={child.label} href={child.href} className="nav-m-sub-item"
+                        onClick={closeMobile}>
+                        {child.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <a key={link.label} href={link.href} className="nav-m-item" onClick={closeMobile}>
+                {link.label}
+              </a>
+            )
+          )}
+          <a href="#contact" className="nav-m-cta" onClick={closeMobile}>Get Started</a>
         </nav>
       )}
     </header>
@@ -475,7 +604,33 @@ function Hero() {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
+const EMPTY_CONTENT: SiteContent = { blogPosts: [], opportunities: [] }
+
 export default function App() {
+  const [siteContent, setSiteContent] = useState<SiteContent>(EMPTY_CONTENT)
+  const [adminMode, setAdminMode] = useState(false)
+
+  useEffect(() => {
+    const local = localStorage.getItem('rae:content')
+    if (local) {
+      try { setSiteContent(JSON.parse(local)); return } catch {}
+    }
+    fetch(`${import.meta.env.BASE_URL}data/content.json`)
+      .then(r => r.json())
+      .then(setSiteContent)
+      .catch(() => {})
+  }, [])
+
+  if (adminMode) {
+    return (
+      <AdminPanel
+        content={siteContent}
+        onContentChange={setSiteContent}
+        onExit={() => setAdminMode(false)}
+      />
+    )
+  }
+
   return (
     <div className="site">
       <Navbar />
@@ -497,7 +652,7 @@ export default function App() {
           <div className="about-layout">
             <div className="about-visual">
               <img
-                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1573497701240-345a300b8d36?auto=format&fit=crop&w=800&q=80"
                 alt="RAE business advisory"
                 className="about-img"
               />
@@ -598,7 +753,7 @@ export default function App() {
       {/* ── DIASPORA ── */}
       <section id="diaspora" className="dsp-section">
 
-        <div className="dsp-banner">
+        <div id="diaspora-overview" className="dsp-banner">
           <div className="container">
             <div className="dsp-banner-inner">
               <div className="dsp-banner-copy">
@@ -617,24 +772,31 @@ export default function App() {
                 </div>
                 <a href="#contact" className="dsp-banner-btn">Book a Consultation</a>
               </div>
-              <div className="dsp-metrics">
-                {[
-                  { value: '7+',   label: 'Countries Served' },
-                  { value: '100%', label: 'Remote Capable'   },
-                  { value: '9',    label: 'Core Services'    },
-                  { value: '10+',  label: 'Years Experience' },
-                ].map((m, i) => (
-                  <div key={i} className="dsp-metric">
-                    <span className="dsp-metric-val">{m.value}</span>
-                    <span className="dsp-metric-lbl">{m.label}</span>
-                  </div>
-                ))}
+              <div className="dsp-visual">
+                <img
+                  src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80"
+                  alt="African professionals collaborating"
+                  className="dsp-visual-img"
+                />
+                <div className="dsp-metrics">
+                  {[
+                    { value: '7+',   label: 'Countries Served' },
+                    { value: '100%', label: 'Remote Capable'   },
+                    { value: '9',    label: 'Core Services'    },
+                    { value: '10+',  label: 'Years Experience' },
+                  ].map((m, i) => (
+                    <div key={i} className="dsp-metric">
+                      <span className="dsp-metric-val">{m.value}</span>
+                      <span className="dsp-metric-lbl">{m.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="sec sec--gray">
+        <div id="diaspora-services" className="sec sec--gray">
           <div className="container">
             <div className="sec-hd">
               <Tag>What We Do</Tag>
@@ -657,7 +819,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="dsp-why">
+        <div id="diaspora-why" className="dsp-why">
           <div className="container">
             <div className="sec-hd">
               <Tag>Why Diaspora Clients Choose Us</Tag>
@@ -714,6 +876,37 @@ export default function App() {
             <p className="sec-lead">Transparent, structured pricing designed for every level of business growth.</p>
           </div>
           <div className="pkg-grid">
+            {/* ── BESPOKE / CUSTOM PACKAGE ── */}
+            <div className="pkg-card pkg-card--custom">
+              <div className="pkg-custom-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"
+                  strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+              </div>
+              <h3 className="pkg-name">Bespoke Package</h3>
+              <p className="pkg-custom-tagline">Your terms. Your scope. Your price.</p>
+              <p className="pkg-custom-desc">
+                Not sure which package fits your situation? Tell us exactly what your business needs — the services, timeline, and budget that work for you — and our advisory team will build a tailored solution from scratch.
+              </p>
+              <ul className="pkg-feats pkg-feats--custom">
+                {[
+                  'Any combination of our services',
+                  'Quotation delivered to your email within 24 hrs',
+                ].map(f => (<li key={f}><Check /><span>{f}</span></li>))}
+              </ul>
+              <a href="#contact-custom" className="pkg-btn pkg-btn--custom">
+                Request a Quote
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
+                  strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
+                  <path d="M3 8h10M8 3l5 5-5 5"/>
+                </svg>
+              </a>
+              <p className="pkg-custom-note">
+                Our marketing team will reply to your email with a detailed quotation within 24 hours.
+              </p>
+            </div>
+
             {PACKAGES.map(pkg => (
               <div key={pkg.name} className={`pkg-card${pkg.featured ? ' pkg-card--star' : ''}`}>
                 {pkg.featured && <div className="pkg-badge">Most Popular</div>}
@@ -756,6 +949,12 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* ── OPPORTUNITIES ── */}
+      <OpportunitiesSection opportunities={siteContent.opportunities} />
+
+      {/* ── BLOG ── */}
+      <BlogSection posts={siteContent.blogPosts} />
 
       {/* ── TEAM ── */}
       <section id="team" className="sec">
@@ -841,7 +1040,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="contact-form-panel">
+            <div id="contact-custom" className="contact-form-panel">
               <h3>Send Us a Message</h3>
               <form onSubmit={e => e.preventDefault()}>
                 <div className="form-row">
@@ -862,12 +1061,19 @@ export default function App() {
                   <label>Service of Interest</label>
                   <select>
                     <option value="">Select a service…</option>
+                    <option value="custom-package">✦ Custom Package / Request a Quotation</option>
                     {SERVICES.map(s => <option key={s.id}>{s.title}</option>)}
                   </select>
                 </div>
                 <div className="fg">
                   <label>Message</label>
-                  <textarea rows={4} placeholder="Tell us about your business and how we can help…" />
+                  <textarea rows={4} placeholder="Tell us about your business, the services you need, your budget range, and preferred timeline…" />
+                </div>
+                <div className="form-quote-note">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                  </svg>
+                  For custom package requests, our marketing team will reply to your email with a personalised quotation within <strong>24 hours</strong>.
                 </div>
                 <button type="submit" className="form-submit">Send Message</button>
               </form>
@@ -927,6 +1133,7 @@ export default function App() {
           <div className="footer-bottom">
             <p>&copy; {new Date().getFullYear()} Righteous African Equities. All rights reserved.</p>
             <p className="footer-motto">"....building Africa's Next Generation of Enterprises"</p>
+            <button className="footer-admin-link" onClick={() => setAdminMode(true)} aria-label="Admin">Admin</button>
           </div>
         </div>
       </footer>
