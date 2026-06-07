@@ -942,7 +942,7 @@ export default function App() {
           <div className="team-showcase">
             <div className="team-showcase-img">
               <img
-                src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80"
                 alt="RAE Leadership Team"
                 className="team-group-photo"
               />
