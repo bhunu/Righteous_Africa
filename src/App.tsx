@@ -596,6 +596,24 @@ export default function App() {
       .catch(() => {})
   }, [])
 
+  const dspOppRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = dspOppRef.current
+    if (!el) return
+    const id = setInterval(() => {
+      const card = el.querySelector<HTMLElement>('.dsp-opp-card')
+      if (!card) return
+      const step = card.offsetWidth + 24
+      const maxScroll = el.scrollWidth - el.clientWidth
+      if (el.scrollLeft >= maxScroll - 1) {
+        el.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        el.scrollBy({ left: step, behavior: 'smooth' })
+      }
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
+
   const pkgRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = pkgRef.current
@@ -838,14 +856,16 @@ export default function App() {
               <h2 className="rae-h2">Where Your Capital Can Grow</h2>
               <p className="sec-lead">Curated investment opportunities across Zimbabwe and the broader African market — sourced, vetted, and structured by our team.</p>
             </div>
-            <div className="dsp-opp-grid">
-              {DIASPORA_OPPS.map((o, i) => (
-                <div key={i} className="dsp-opp-card">
-                  <div className="dsp-opp-icon">{DIASPORA_OPP_ICONS[i]}</div>
-                  <h4 className="dsp-opp-title">{o.title}</h4>
-                  <p className="dsp-opp-desc">{o.desc}</p>
-                </div>
-              ))}
+            <div className="dsp-opp-slider" ref={dspOppRef}>
+              <div className="dsp-opp-grid">
+                {DIASPORA_OPPS.map((o, i) => (
+                  <div key={i} className="dsp-opp-card">
+                    <div className="dsp-opp-icon">{DIASPORA_OPP_ICONS[i]}</div>
+                    <h4 className="dsp-opp-title">{o.title}</h4>
+                    <p className="dsp-opp-desc">{o.desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -897,7 +917,7 @@ export default function App() {
                 </svg>
               </a>
               <p className="pkg-custom-note">
-                Our marketing team will reply to your email with a detailed quotation within 24 hours.
+                Our company experts team will reply to your email with a detailed quotation within 24 hours.
               </p>
             </div>
 
@@ -1080,7 +1100,7 @@ export default function App() {
                   <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
                   </svg>
-                  For custom package requests, our marketing team will reply to your email with a personalised quotation within <strong>24 hours</strong>.
+                  For custom package requests, our company experts team will reply to your email with a personalised quotation within <strong>24 hours</strong>.
                 </div>
                 <button type="submit" className="form-submit">Send Message</button>
               </form>
