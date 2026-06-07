@@ -1,7 +1,26 @@
+import { useRef, useEffect } from 'react'
 import type { BlogPost } from '../data/types'
 
 export default function BlogSection({ posts }: { posts: BlogPost[] }) {
   const published = posts.filter(p => p.published)
+  const sliderRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = sliderRef.current
+    if (!el) return
+    const id = setInterval(() => {
+      const card = el.querySelector<HTMLElement>('.blog-card')
+      if (!card) return
+      const step = card.offsetWidth + 28
+      const maxScroll = el.scrollWidth - el.clientWidth
+      if (el.scrollLeft >= maxScroll - 1) {
+        el.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        el.scrollBy({ left: step, behavior: 'smooth' })
+      }
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
 
   return (
     <section id="blog" className="sec sec--gray">
@@ -15,37 +34,39 @@ export default function BlogSection({ posts }: { posts: BlogPost[] }) {
         {published.length === 0 ? (
           <p className="content-empty">No posts published yet. Check back soon.</p>
         ) : (
-          <div className="blog-grid">
-            {published.map(post => (
-              <article key={post.id} className="blog-card">
-                {post.image && (
-                  <div className="blog-img-wrap">
-                    <img src={post.image} alt={post.title} className="blog-img" loading="lazy" />
-                    <span className="blog-cat">{post.category}</span>
-                  </div>
-                )}
-                <div className="blog-body">
-                  <div className="blog-meta">
-                    <span>{post.author}</span>
-                    <span className="blog-dot">·</span>
-                    <span>
-                      {new Date(post.date).toLocaleDateString('en-GB', {
-                        day: 'numeric', month: 'short', year: 'numeric',
-                      })}
+          <div className="blog-slider" ref={sliderRef}>
+            <div className="blog-grid">
+              {published.map(post => (
+                <article key={post.id} className="blog-card">
+                  {post.image && (
+                    <div className="blog-img-wrap">
+                      <img src={post.image} alt={post.title} className="blog-img" loading="lazy" />
+                      <span className="blog-cat">{post.category}</span>
+                    </div>
+                  )}
+                  <div className="blog-body">
+                    <div className="blog-meta">
+                      <span>{post.author}</span>
+                      <span className="blog-dot">·</span>
+                      <span>
+                        {new Date(post.date).toLocaleDateString('en-GB', {
+                          day: 'numeric', month: 'short', year: 'numeric',
+                        })}
+                      </span>
+                    </div>
+                    <h3 className="blog-title">{post.title}</h3>
+                    <p className="blog-excerpt">{post.excerpt}</p>
+                    <span className="srv-more">
+                      Read more
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
+                        strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
+                        <path d="M3 8h10M8 3l5 5-5 5" />
+                      </svg>
                     </span>
                   </div>
-                  <h3 className="blog-title">{post.title}</h3>
-                  <p className="blog-excerpt">{post.excerpt}</p>
-                  <span className="srv-more">
-                    Read more
-                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
-                      strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
-                      <path d="M3 8h10M8 3l5 5-5 5" />
-                    </svg>
-                  </span>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
         )}
       </div>

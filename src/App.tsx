@@ -596,6 +596,24 @@ export default function App() {
       .catch(() => {})
   }, [])
 
+  const pkgRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = pkgRef.current
+    if (!el) return
+    const id = setInterval(() => {
+      const card = el.querySelector<HTMLElement>('.pkg-card')
+      if (!card) return
+      const step = card.offsetWidth + 24
+      const maxScroll = el.scrollWidth - el.clientWidth
+      if (el.scrollLeft >= maxScroll - 1) {
+        el.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        el.scrollBy({ left: step, behavior: 'smooth' })
+      }
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
+
   if (adminMode) {
     return (
       <AdminPanel
@@ -850,6 +868,7 @@ export default function App() {
             <h2 className="rae-h2">Packages Tailored to Your Stage</h2>
             <p className="sec-lead">Transparent, structured pricing designed for every level of business growth.</p>
           </div>
+          <div className="pkg-slider" ref={pkgRef}>
           <div className="pkg-grid">
             {/* ── BESPOKE / CUSTOM PACKAGE ── */}
             <div className="pkg-card pkg-card--custom">
@@ -902,6 +921,7 @@ export default function App() {
                 </a>
               </div>
             ))}
+          </div>
           </div>
         </div>
       </section>
