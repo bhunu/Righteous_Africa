@@ -610,6 +610,19 @@ export default function App() {
   const [siteContent, setSiteContent] = useState<SiteContent>(EMPTY_CONTENT)
   const [adminMode, setAdminMode] = useState(false)
 
+  // Double-tap Enter triggers admin login
+  useEffect(() => {
+    let last = 0
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter') return
+      const now = Date.now()
+      if (now - last < 400) setAdminMode(true)
+      last = now
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   useEffect(() => {
     const local = localStorage.getItem('rae:content')
     if (local) {
@@ -1133,7 +1146,6 @@ export default function App() {
           <div className="footer-bottom">
             <p>&copy; {new Date().getFullYear()} Righteous African Equities. All rights reserved.</p>
             <p className="footer-motto">"....building Africa's Next Generation of Enterprises"</p>
-            <button className="footer-admin-link" onClick={() => setAdminMode(true)} aria-label="Admin">Admin</button>
           </div>
         </div>
       </footer>

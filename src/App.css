@@ -1349,18 +1349,6 @@ a.c-val:hover { color: var(--red); }
 }
 .content-empty a { color: var(--red); }
 
-/* ─── FOOTER ADMIN LINK ────────────────────────────────────────────────────── */
-.footer-admin-link {
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.18);
-  font-size: .7rem;
-  cursor: pointer;
-  padding: 0;
-  letter-spacing: .05em;
-  transition: color var(--ease);
-}
-.footer-admin-link:hover { color: rgba(255,255,255,0.5); }
 
 /* ─── BLOG SECTION ─────────────────────────────────────────────────────────── */
 .blog-grid {
