@@ -625,18 +625,6 @@ export default function App() {
       <section id="about" className="sec">
         <div className="container">
           <div className="about-layout">
-            <div className="about-visual">
-              <img
-                src="https://images.unsplash.com/photo-1573497701240-345a300b8d36?auto=format&fit=crop&w=800&q=80"
-                alt="RAE business advisory"
-                className="about-img"
-              />
-              <div className="about-badge">
-                <span className="about-badge-n">10+</span>
-                <span className="about-badge-t">Years of Excellence</span>
-              </div>
-            </div>
-
             <div className="about-copy">
               <Tag>Who We Are</Tag>
               <h2 className="rae-h2">An Enterprise Development &amp; Venture Support Platform</h2>
@@ -665,6 +653,18 @@ export default function App() {
                     <p>To transform innovative African ideas into scalable, sustainable enterprises that create lasting economic impact across the continent.</p>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="about-visual">
+              <img
+                src="https://images.unsplash.com/photo-1573497701240-345a300b8d36?auto=format&fit=crop&w=800&q=80"
+                alt="RAE business advisory"
+                className="about-img"
+              />
+              <div className="about-badge">
+                <span className="about-badge-n">10+</span>
+                <span className="about-badge-t">Years of Excellence</span>
               </div>
             </div>
           </div>
@@ -940,13 +940,6 @@ export default function App() {
             <p className="sec-lead">Experienced professionals dedicated to transforming African entrepreneurship into global impact.</p>
           </div>
           <div className="team-showcase">
-            <div className="team-showcase-img">
-              <img
-                src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80"
-                alt="RAE Leadership Team"
-                className="team-group-photo"
-              />
-            </div>
             <div className="team-showcase-text">
               <h3>A Team Built for Excellence</h3>
               <p>
@@ -965,6 +958,13 @@ export default function App() {
                 <li>Deep expertise across African and international markets</li>
                 <li>Unwavering commitment to client growth and compliance</li>
               </ul>
+            </div>
+            <div className="team-showcase-img">
+              <img
+                src="https://images.unsplash.com/photo-1739298061740-5ed03045b280?auto=format&fit=crop&w=800&q=80"
+                alt="RAE Leadership Team"
+                className="team-group-photo"
+              />
             </div>
           </div>
         </div>
