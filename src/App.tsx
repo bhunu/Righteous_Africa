@@ -19,21 +19,7 @@ const NAV_LINKS: NavGroup[] = [
       { label: 'Sectors We Serve',  href: '#sectors', desc: 'Industries we work across'         },
     ],
   },
-  {
-    label: 'Services',
-    wide: true,
-    children: [
-      { label: 'Business Incubation',       href: '#services', desc: 'Idea to investor-ready'         },
-      { label: 'Accounting & Bookkeeping',  href: '#services', desc: 'Financial clarity & compliance' },
-      { label: 'Company Registration',      href: '#services', desc: 'Fast-track legal setup'         },
-      { label: 'Business Planning',         href: '#services', desc: 'Investor-grade plans'           },
-      { label: 'Financial Modeling',        href: '#services', desc: 'Data-driven projections'        },
-      { label: 'Investor Readiness',        href: '#services', desc: 'Pitch decks & due diligence'   },
-      { label: 'Venture Capital',           href: '#services', desc: 'Connect with funders'           },
-      { label: 'Export Development',        href: '#services', desc: 'Access global markets'          },
-      { label: 'SME Advisory',              href: '#services', desc: 'Strategic business guidance'    },
-    ],
-  },
+  { label: 'Our Services', href: '#services' },
   {
     label: 'Diaspora',
     children: [
@@ -84,9 +70,9 @@ const SLIDES = [
 ]
 
 const STATS = [
-  { value: '500+',       label: 'Entrepreneurs Supported' },
+  { value: '60+',        label: 'Entrepreneurs Supported' },
   { value: '8',          label: 'Core Service Areas'       },
-  { value: '$2M+',       label: 'Capital Facilitated'      },
+  { value: '$300K+',     label: 'Capital Facilitated'      },
   { value: '360°',       label: 'Business Support'         },
 ]
 
@@ -342,16 +328,6 @@ const DIASPORA_OPP_ICONS: ReactNode[] = [
 
 // ─── SUB-COMPONENTS ───────────────────────────────────────────────────────────
 
-function LogoMark({ size = 38 }: { size?: number }) {
-  const h = Math.round(size * 0.78)
-  return (
-    <svg width={size} height={h} viewBox="0 0 46 36" fill="none" aria-hidden="true">
-      <path d="M2 33L14 4L26 33"  stroke="#C8102E" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M20 33L32 4L44 33" stroke="#C8102E" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M11 33L23 9L35 33" stroke="#0A0A0A" strokeWidth="3"   strokeLinecap="round" strokeLinejoin="round" opacity="0.82"/>
-    </svg>
-  )
-}
 
 function Check() {
   return (
@@ -731,7 +707,7 @@ export default function App() {
                 className="about-img"
               />
               <div className="about-badge">
-                <span className="about-badge-n">10+</span>
+                <span className="about-badge-n">2+</span>
                 <span className="about-badge-t">Years of Excellence</span>
               </div>
             </div>
@@ -828,7 +804,7 @@ export default function App() {
                     { value: '7+',   label: 'Countries Served' },
                     { value: '100%', label: 'Remote Capable'   },
                     { value: '9',    label: 'Core Services'    },
-                    { value: '10+',  label: 'Years Experience' },
+                    { value: '2+',   label: 'Years Experience' },
                   ].map((m, i) => (
                     <div key={i} className="dsp-metric">
                       <span className="dsp-metric-val">{m.value}</span>
@@ -1029,7 +1005,7 @@ export default function App() {
             </div>
             <div className="team-showcase-img">
               <img
-                src="/images/laptop.jpg"
+                src="https://images.unsplash.com/photo-1739298061740-5ed03045b280?auto=format&fit=crop&w=800&q=80"
                 alt="RAE Leadership Team"
                 className="team-group-photo"
               />
