@@ -1240,19 +1240,16 @@ a.c-val:hover { color: var(--red); }
 
 /* Opportunities */
 .dsp-opp-slider {
+  display: flex;
+  flex-wrap: nowrap;
   overflow-x: auto;
+  gap: 1.5rem;
   scroll-behavior: smooth;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 .dsp-opp-slider::-webkit-scrollbar { display: none; }
-
-.dsp-opp-grid {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 1.5rem;
-}
-.dsp-opp-grid .dsp-opp-card {
+.dsp-opp-slider .dsp-opp-card {
   flex: 0 0 calc((100% - 3rem) / 3);
   min-width: calc((100% - 3rem) / 3);
 }
@@ -1330,7 +1327,7 @@ a.c-val:hover { color: var(--red); }
   .dsp-banner-inner { grid-template-columns: 1fr; gap: 3rem; }
   .dsp-metrics      { grid-template-columns: repeat(4, 1fr); }
   .dsp-why-grid     { grid-template-columns: repeat(2, 1fr); }
-  .dsp-opp-grid .dsp-opp-card { flex: 0 0 calc((100% - 3rem) / 3); min-width: calc((100% - 3rem) / 3); }
+  .dsp-opp-slider .dsp-opp-card { flex: 0 0 calc((100% - 3rem) / 3); min-width: calc((100% - 3rem) / 3); }
 }
 
 @media (max-width: 768px) {
@@ -1369,7 +1366,7 @@ a.c-val:hover { color: var(--red); }
   .dsp-metrics   { grid-template-columns: 1fr 1fr; }
   .dsp-why       { padding: 4rem 0; }
   .dsp-why-grid  { grid-template-columns: 1fr; }
-  .dsp-opp-grid .dsp-opp-card { flex: 0 0 calc((100% - 1.5rem) / 2); min-width: calc((100% - 1.5rem) / 2); }
+  .dsp-opp-slider .dsp-opp-card { flex: 0 0 calc((100% - 1.5rem) / 2); min-width: calc((100% - 1.5rem) / 2); }
   .blog-grid .blog-card { flex: 0 0 calc((100% - 1.75rem) / 2); min-width: calc((100% - 1.75rem) / 2); }
   .opp-grid .opp-card  { flex: 0 0 calc((100% - 1.75rem) / 2); min-width: calc((100% - 1.75rem) / 2); }
   .adm-shell     { flex-direction: column; }

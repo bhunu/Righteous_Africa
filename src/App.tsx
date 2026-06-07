@@ -857,15 +857,13 @@ export default function App() {
               <p className="sec-lead">Curated investment opportunities across Zimbabwe and the broader African market — sourced, vetted, and structured by our team.</p>
             </div>
             <div className="dsp-opp-slider" ref={dspOppRef}>
-              <div className="dsp-opp-grid">
-                {DIASPORA_OPPS.map((o, i) => (
-                  <div key={i} className="dsp-opp-card">
-                    <div className="dsp-opp-icon">{DIASPORA_OPP_ICONS[i]}</div>
-                    <h4 className="dsp-opp-title">{o.title}</h4>
-                    <p className="dsp-opp-desc">{o.desc}</p>
-                  </div>
-                ))}
-              </div>
+              {DIASPORA_OPPS.map((o, i) => (
+                <div key={i} className="dsp-opp-card">
+                  <div className="dsp-opp-icon">{DIASPORA_OPP_ICONS[i]}</div>
+                  <h4 className="dsp-opp-title">{o.title}</h4>
+                  <p className="dsp-opp-desc">{o.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
