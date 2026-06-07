@@ -232,44 +232,6 @@ const SECTORS = [
   'Manufacturing', 'Real Estate', 'Retail & FMCG', 'Financial Services',
 ]
 
-const TEAM = [
-  {
-    name: 'Tendai Moyo',
-    role: 'Founder & Chief Executive Officer',
-    bio: 'Seasoned enterprise development specialist with 15+ years guiding African ventures from concept to capital.',
-    img: 'https://images.unsplash.com/photo-1495603889488-42d1d66e5523?auto=format&fit=crop&w=400&h=480&q=80',
-  },
-  {
-    name: 'Rudo Chikwanda',
-    role: 'Chief Financial Officer',
-    bio: 'CPA with extensive experience in financial modeling, investor readiness, and cross-border transactions.',
-    img: 'https://images.unsplash.com/photo-1573497620013-7f7660da1a48?auto=format&fit=crop&w=400&h=480&q=80',
-  },
-  {
-    name: 'Farai Mutasa',
-    role: 'Head of Business Advisory',
-    bio: 'Strategic advisor with a proven track record of scaling startups across Southern and East Africa.',
-    img: 'https://images.unsplash.com/photo-1589114207353-1fc98a11070b?auto=format&fit=crop&w=400&h=480&q=80',
-  },
-  {
-    name: 'Ngozi Adeyemi',
-    role: 'Director, Investor Relations',
-    bio: 'Former investment banker with deep networks across Pan-African capital markets and diaspora investors.',
-    img: 'https://images.unsplash.com/photo-1636144896336-b056be4a8dfe?auto=format&fit=crop&w=400&h=480&q=80',
-  },
-  {
-    name: 'Sibusiso Dlamini',
-    role: 'Head of Market Development',
-    bio: 'Export specialist helping African SMEs access transformative regional and international opportunities.',
-    img: 'https://images.unsplash.com/photo-1528901166007-3784c7dd3653?auto=format&fit=crop&w=400&h=480&q=80',
-  },
-  {
-    name: 'Amara Osei',
-    role: 'Senior Business Analyst',
-    bio: 'Data-driven analyst specialising in financial due diligence and business performance optimisation.',
-    img: 'https://images.unsplash.com/photo-1573497619951-6c9477fb83b4?auto=format&fit=crop&w=400&h=480&q=80',
-  },
-]
 
 // ─── DIASPORA DATA ────────────────────────────────────────────────────────────
 
@@ -977,22 +939,34 @@ export default function App() {
             <h2 className="rae-h2">Leadership Team</h2>
             <p className="sec-lead">Experienced professionals dedicated to transforming African entrepreneurship into global impact.</p>
           </div>
-          <div className="team-grid">
-            {TEAM.map(m => (
-              <div key={m.name} className="team-card">
-                <div className="team-photo-wrap">
-                  <img src={m.img} alt={m.name} className="team-photo" />
-                  <div className="team-photo-overlay" />
-                </div>
-                <div className="team-info">
-                  <h3 className="team-name">{m.name}</h3>
-                  <div className="team-role">{m.role}</div>
-                  <p className="team-bio">{m.bio}</p>
-                </div>
-              </div>
-            ))}
+          <div className="team-showcase">
+            <div className="team-showcase-img">
+              <img
+                src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80"
+                alt="RAE Leadership Team"
+                className="team-group-photo"
+              />
+            </div>
+            <div className="team-showcase-text">
+              <h3>A Team Built for Excellence</h3>
+              <p>
+                Our leadership comprises highly qualified Chartered Accountants and financial professionals who bring
+                decades of combined expertise across audit, advisory, taxation, and corporate finance. We are
+                African-led, results-focused, and proud of it.
+              </p>
+              <p>
+                From the first engagement to the final deliverable, we operate with precision and integrity.
+                Every deadline is a commitment — our clients receive accurate, insightful reporting on time,
+                every time, without exception.
+              </p>
+              <ul className="team-pillars">
+                <li>Timely, accurate financial reporting — zero missed deadlines</li>
+                <li>Proactive advisory that drives measurable business outcomes</li>
+                <li>Deep expertise across African and international markets</li>
+                <li>Unwavering commitment to client growth and compliance</li>
+              </ul>
+            </div>
           </div>
-          <p className="team-note">* Placeholder profiles — please replace with actual RAE leadership photos and biographies.</p>
         </div>
       </section>
 
