@@ -75,7 +75,7 @@ const SLIDES = [
     sub: 'Connecting visionary entrepreneurs with capital, strategy, and the networks they need to succeed',
   },
   {
-    img: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=1920&q=80',
+    img: '/images/laptop.jpg',
     head: 'Strategic Advisory',
     accent: 'for Bold',
     tail: 'African Ventures',
@@ -407,11 +407,7 @@ function Navbar() {
 
         {/* Logo */}
         <a href="#" className="nav-logo" onClick={closeMobile}>
-          <LogoMark size={38} />
-          <div className="nav-logo-copy">
-            <span className="nav-logo-name">Righteous African</span>
-            <span className="nav-logo-sub">Equities</span>
-          </div>
+          <img src="/images/logo.png" alt="Righteous African Equities" className="nav-logo-img" />
         </a>
 
         {/* Desktop nav */}
@@ -632,6 +628,42 @@ export default function App() {
     return () => clearInterval(id)
   }, [])
 
+  const srvRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = srvRef.current
+    if (!el) return
+    const id = setInterval(() => {
+      const card = el.querySelector<HTMLElement>('.srv-card')
+      if (!card) return
+      const step = card.offsetWidth + 24
+      const maxScroll = el.scrollWidth - el.clientWidth
+      if (el.scrollLeft >= maxScroll - 1) {
+        el.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        el.scrollBy({ left: step, behavior: 'smooth' })
+      }
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
+
+  const dspSrvRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = dspSrvRef.current
+    if (!el) return
+    const id = setInterval(() => {
+      const card = el.querySelector<HTMLElement>('.srv-card')
+      if (!card) return
+      const step = card.offsetWidth + 24
+      const maxScroll = el.scrollWidth - el.clientWidth
+      if (el.scrollLeft >= maxScroll - 1) {
+        el.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        el.scrollBy({ left: step, behavior: 'smooth' })
+      }
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
+
   if (adminMode) {
     return (
       <AdminPanel
@@ -715,18 +747,20 @@ export default function App() {
             <h2 className="rae-h2">Comprehensive Business Services</h2>
             <p className="sec-lead">From inception to global expansion — we support every stage of your entrepreneurial journey.</p>
           </div>
-          <div className="srv-grid">
-            {SERVICES.map(s => (
-              <div key={s.id} className="srv-card">
-                <div className="srv-icon">{SERVICE_ICONS[s.id]}</div>
-                <h3 className="srv-title">{s.title}</h3>
-                <p className="srv-desc">{s.desc}</p>
-                <span className="srv-more">
-                  Learn more
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
-                </span>
-              </div>
-            ))}
+          <div className="srv-slider" ref={srvRef}>
+            <div className="srv-grid">
+              {SERVICES.map(s => (
+                <div key={s.id} className="srv-card">
+                  <div className="srv-icon">{SERVICE_ICONS[s.id]}</div>
+                  <h3 className="srv-title">{s.title}</h3>
+                  <p className="srv-desc">{s.desc}</p>
+                  <span className="srv-more">
+                    Learn more
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -814,18 +848,20 @@ export default function App() {
               <h2 className="rae-h2">End-to-End Diaspora Services</h2>
               <p className="sec-lead">From business registration to investment structuring — everything managed professionally, wherever you are in the world.</p>
             </div>
-            <div className="srv-grid">
-              {DIASPORA_SERVICES.map(s => (
-                <div key={s.id} className="srv-card">
-                  <div className="srv-icon">{DIASPORA_ICONS[s.id]}</div>
-                  <h3 className="srv-title">{s.title}</h3>
-                  <p className="srv-desc">{s.desc}</p>
-                  <span className="srv-more">
-                    Enquire now
-                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
-                  </span>
-                </div>
-              ))}
+            <div className="srv-slider" ref={dspSrvRef}>
+              <div className="srv-grid">
+                {DIASPORA_SERVICES.map(s => (
+                  <div key={s.id} className="srv-card">
+                    <div className="srv-icon">{DIASPORA_ICONS[s.id]}</div>
+                    <h3 className="srv-title">{s.title}</h3>
+                    <p className="srv-desc">{s.desc}</p>
+                    <span className="srv-more">
+                      Enquire now
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -981,25 +1017,19 @@ export default function App() {
             <div className="team-showcase-text">
               <h3>A Team Built for Excellence</h3>
               <p>
-                Our leadership comprises highly qualified Chartered Accountants and financial professionals who bring
-                decades of combined expertise across audit, advisory, taxation, and corporate finance. We are
-                African-led, results-focused, and proud of it.
+                Our leadership comprises highly qualified Chartered Accountants and financial professionals with
+                decades of combined expertise across audit, advisory, taxation, and corporate finance — African-led,
+                results-focused, and deeply committed to proactive advisory that drives measurable business outcomes.
               </p>
               <p>
-                From the first engagement to the final deliverable, we operate with precision and integrity.
-                Every deadline is a commitment — our clients receive accurate, insightful reporting on time,
-                every time, without exception.
+                From the first engagement to the final deliverable, we operate with precision and integrity across
+                African and international markets. Every deadline is a commitment — our clients receive accurate,
+                insightful reporting on time, every time, without exception.
               </p>
-              <ul className="team-pillars">
-                <li>Timely, accurate financial reporting — zero missed deadlines</li>
-                <li>Proactive advisory that drives measurable business outcomes</li>
-                <li>Deep expertise across African and international markets</li>
-                <li>Unwavering commitment to client growth and compliance</li>
-              </ul>
             </div>
             <div className="team-showcase-img">
               <img
-                src="https://images.unsplash.com/photo-1739298061740-5ed03045b280?auto=format&fit=crop&w=800&q=80"
+                src="/images/laptop.jpg"
                 alt="RAE Leadership Team"
                 className="team-group-photo"
               />
@@ -1113,11 +1143,7 @@ export default function App() {
           <div className="footer-layout">
             <div className="footer-brand">
               <a href="#" className="nav-logo">
-                <LogoMark size={34} />
-                <div className="nav-logo-copy">
-                  <span className="nav-logo-name" style={{ color: '#fff' }}>Righteous African</span>
-                  <span className="nav-logo-sub">Equities</span>
-                </div>
+                <img src="/images/logo.png" alt="Righteous African Equities" className="nav-logo-img nav-logo-img--footer" />
               </a>
               <p className="footer-tag">
                 Empowering Africa's next generation of entrepreneurs and enterprises. Building legacies that last.

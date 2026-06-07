@@ -102,6 +102,18 @@
   flex-shrink: 0;
   line-height: 1;
 }
+.nav-logo-img {
+  height: 52px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.nav-logo-img--footer {
+  background: rgba(255,255,255,.92);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
 .nav-logo-copy {
   display: flex;
   flex-direction: column;
@@ -571,10 +583,22 @@
 }
 
 /* ─── SERVICES ───────────────────────────────────────────────────────────── */
+.srv-slider {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.srv-slider::-webkit-scrollbar { display: none; }
+
 .srv-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: nowrap;
   gap: 1.5rem;
+}
+.srv-slider .srv-card {
+  flex: 0 0 calc((100% - 3rem) / 3);
+  min-width: calc((100% - 3rem) / 3);
 }
 .srv-card {
   background: var(--white);
@@ -1319,7 +1343,7 @@ a.c-val:hover { color: var(--red); }
   .about-layout     { grid-template-columns: 1fr; gap: 3rem; }
   .about-img        { height: 360px; }
   .about-badge      { right: 1rem; }
-  .srv-grid         { grid-template-columns: repeat(2, 1fr); }
+  .srv-slider .srv-card { flex: 0 0 calc((100% - 3rem) / 3); min-width: calc((100% - 3rem) / 3); }
   .team-showcase    { grid-template-columns: 1fr; gap: 2.5rem; }
   .contact-layout   { grid-template-columns: 1fr; gap: 2.5rem; }
   .footer-layout    { grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -1352,7 +1376,7 @@ a.c-val:hover { color: var(--red); }
   .container     { padding: 0 1.25rem; }
   .sec           { padding: 4rem 0; }
   .sec-hd        { margin-bottom: 2.5rem; }
-  .srv-grid      { grid-template-columns: 1fr; }
+  .srv-slider .srv-card { flex: 0 0 calc((100% - 1.5rem) / 2); min-width: calc((100% - 1.5rem) / 2); }
   .team-group-photo { height: 320px; }
   .sec-grid      { grid-template-columns: 1fr 1fr; }
   .form-row      { grid-template-columns: 1fr; }
