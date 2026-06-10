@@ -3,20 +3,17 @@ import cors from 'cors'
 import nodemailer from 'nodemailer'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
-
-// Load .env for local development (cPanel sets env vars directly)
-try {
-  const dotenv = await import('dotenv')
-  dotenv.config()
-} catch {}
+import { createRequire } from 'module'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
+
+try {
+  createRequire(import.meta.url)('dotenv').config({ path: join(__dirname, '.env') })
+} catch {}
 
 const app = express()
 app.use(cors())
 app.use(express.json())
-
-// Serve built React app in production
 app.use(express.static(join(__dirname, 'dist')))
 
 const transporter = nodemailer.createTransport({
@@ -59,7 +56,6 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
-// SPA fallback — Express 5 requires named wildcard
 app.get('/{*path}', (_req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'))
 })
