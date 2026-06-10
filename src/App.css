@@ -2158,3 +2158,15 @@ a.c-val:hover { color: var(--red); }
   transition: color var(--ease);
 }
 .adm-pin-cancel:hover { color: var(--dark); }
+
+/* ── CONTACT FORM FEEDBACK ─────────────────────────────────────────────────── */
+.form-feedback {
+  padding: .75rem 1rem;
+  border-radius: var(--r);
+  font-size: .9rem;
+  font-weight: 500;
+  margin-bottom: .75rem;
+}
+.form-feedback--ok  { background: #e6f9f0; color: #1a7a4a; border: 1px solid #a3dfc0; }
+.form-feedback--err { background: #fdecea; color: #c0392b; border: 1px solid #f5a9a3; }
+.form-submit:disabled { opacity: .65; cursor: not-allowed; }

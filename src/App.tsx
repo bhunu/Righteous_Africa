@@ -536,6 +536,89 @@ function Hero() {
   )
 }
 
+// ─── CONTACT FORM ─────────────────────────────────────────────────────────────
+
+function ContactForm() {
+  const [fields, setFields] = useState({
+    firstName: '', lastName: '', email: '', service: '', message: '',
+  })
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
+
+  const set = (key: keyof typeof fields) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setFields(f => ({ ...f, [key]: e.target.value }))
+
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    setStatus('sending')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fields),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Something went wrong.')
+      setStatus('success')
+      setFields({ firstName: '', lastName: '', email: '', service: '', message: '' })
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong.')
+      setStatus('error')
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="form-row">
+        <div className="fg">
+          <label>First Name</label>
+          <input type="text" placeholder="John" value={fields.firstName} onChange={set('firstName')} required />
+        </div>
+        <div className="fg">
+          <label>Last Name</label>
+          <input type="text" placeholder="Doe" value={fields.lastName} onChange={set('lastName')} />
+        </div>
+      </div>
+      <div className="fg">
+        <label>Email Address</label>
+        <input type="email" placeholder="john@example.com" value={fields.email} onChange={set('email')} required />
+      </div>
+      <div className="fg">
+        <label>Service of Interest</label>
+        <select value={fields.service} onChange={set('service')}>
+          <option value="">Select a service…</option>
+          <option value="Custom Package / Request a Quotation">✦ Custom Package / Request a Quotation</option>
+          {SERVICES.map(s => <option key={s.id} value={s.title}>{s.title}</option>)}
+        </select>
+      </div>
+      <div className="fg">
+        <label>Message</label>
+        <textarea rows={4} placeholder="Tell us about your business, the services you need, your budget range, and preferred timeline…" value={fields.message} onChange={set('message')} required />
+      </div>
+      <div className="form-quote-note">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+        </svg>
+        For custom package requests, our company experts team will reply to your email with a personalised quotation within <strong>24 hours</strong>.
+      </div>
+
+      {status === 'success' && (
+        <div className="form-feedback form-feedback--ok">
+          Message sent! We'll be in touch within 24 hours.
+        </div>
+      )}
+      {status === 'error' && (
+        <div className="form-feedback form-feedback--err">{errorMsg}</div>
+      )}
+
+      <button type="submit" className="form-submit" disabled={status === 'sending'}>
+        {status === 'sending' ? 'Sending…' : 'Send Message'}
+      </button>
+    </form>
+  )
+}
+
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
 const EMPTY_CONTENT: SiteContent = { blogPosts: [], opportunities: [] }
@@ -1073,41 +1156,7 @@ export default function App() {
 
             <div id="contact-custom" className="contact-form-panel">
               <h3>Send Us a Message</h3>
-              <form onSubmit={e => e.preventDefault()}>
-                <div className="form-row">
-                  <div className="fg">
-                    <label>First Name</label>
-                    <input type="text" placeholder="John" />
-                  </div>
-                  <div className="fg">
-                    <label>Last Name</label>
-                    <input type="text" placeholder="Doe" />
-                  </div>
-                </div>
-                <div className="fg">
-                  <label>Email Address</label>
-                  <input type="email" placeholder="john@example.com" />
-                </div>
-                <div className="fg">
-                  <label>Service of Interest</label>
-                  <select>
-                    <option value="">Select a service…</option>
-                    <option value="custom-package">✦ Custom Package / Request a Quotation</option>
-                    {SERVICES.map(s => <option key={s.id}>{s.title}</option>)}
-                  </select>
-                </div>
-                <div className="fg">
-                  <label>Message</label>
-                  <textarea rows={4} placeholder="Tell us about your business, the services you need, your budget range, and preferred timeline…" />
-                </div>
-                <div className="form-quote-note">
-                  <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                  </svg>
-                  For custom package requests, our company experts team will reply to your email with a personalised quotation within <strong>24 hours</strong>.
-                </div>
-                <button type="submit" className="form-submit">Send Message</button>
-              </form>
+              <ContactForm />
             </div>
           </div>
         </div>
