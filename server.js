@@ -2,10 +2,17 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import nodemailer from 'nodemailer'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const app = express()
 app.use(cors())
 app.use(express.json())
+
+// Serve built React app in production
+app.use(express.static(join(__dirname, 'dist')))
 
 const transporter = nodemailer.createTransport({
   host:   process.env.SMTP_HOST,
@@ -45,6 +52,11 @@ app.post('/api/contact', async (req, res) => {
     console.error('Mail error:', err)
     res.status(500).json({ error: 'Failed to send email. Please try again.' })
   }
+})
+
+// SPA fallback — all non-API routes return index.html
+app.get('*', (_req, res) => {
+  res.sendFile(join(__dirname, 'dist', 'index.html'))
 })
 
 const PORT = process.env.PORT || 5000
