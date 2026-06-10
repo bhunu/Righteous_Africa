@@ -1,9 +1,14 @@
-import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import nodemailer from 'nodemailer'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+
+// Load .env for local development (cPanel sets env vars directly)
+try {
+  const dotenv = await import('dotenv')
+  dotenv.config()
+} catch {}
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -54,8 +59,8 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
-// SPA fallback — all non-API routes return index.html
-app.get('*', (_req, res) => {
+// SPA fallback — Express 5 requires named wildcard
+app.get('/{*path}', (_req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'))
 })
 
