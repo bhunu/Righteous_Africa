@@ -12,6 +12,7 @@ dist-ssr
 *.local
 package-lock.json
 tmp/
+*.zip
 
 # Environment variables (never commit secrets)
 .env
