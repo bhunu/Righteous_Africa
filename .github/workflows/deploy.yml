@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Pull latest code from GitHub
         run: |
-          RESPONSE=$(curl -sf -X POST "https://wonderweb.host:2083/execute/VersionControl/update" \
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "https://wonderweb.host:2083/execute/VersionControl/update" \
             -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
             -d "repository=/home/righteou/REA_AFRICA")
           echo "$RESPONSE"
@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy HEAD Commit
         run: |
-          RESPONSE=$(curl -sf -X POST "https://wonderweb.host:2083/execute/VersionControl/create_deploy" \
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "https://wonderweb.host:2083/execute/VersionControl/create_deploy" \
             -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
             -d "repository=/home/righteou/REA_AFRICA")
           echo "$RESPONSE"
@@ -26,7 +26,7 @@ jobs:
 
       - name: Restart Node.js App
         run: |
-          RESPONSE=$(curl -sf -X POST "https://wonderweb.host:2083/execute/NodeJS/restart_app" \
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "https://wonderweb.host:2083/execute/NodeJS/restart_app" \
             -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
             -d "app_root=REA_AFRICA")
           echo "$RESPONSE"
