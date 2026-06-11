@@ -13,7 +13,7 @@ try {
 
 const app = express()
 app.use(cors())
-app.use(express.json())
+app.use(express.json({ limit: '16kb' }))
 app.use(express.static(join(__dirname, 'dist')))
 
 const transporter = nodemailer.createTransport({
@@ -26,6 +26,17 @@ const transporter = nodemailer.createTransport({
   },
 })
 
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 app.post('/api/contact', async (req, res) => {
   const { firstName, lastName, email, service, message } = req.body
 
@@ -33,19 +44,37 @@ app.post('/api/contact', async (req, res) => {
     return res.status(400).json({ error: 'firstName, email and message are required.' })
   }
 
+  if (
+    typeof firstName !== 'string' || firstName.length > 100 ||
+    typeof email     !== 'string' || email.length     > 254  ||
+    typeof message   !== 'string' || message.length   > 5000
+  ) {
+    return res.status(400).json({ error: 'Invalid input.' })
+  }
+
+  if (!EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'Invalid email address.' })
+  }
+
+  const safeFirst   = escHtml(firstName.trim())
+  const safeLast    = escHtml((lastName  || '').trim())
+  const safeEmail   = escHtml(email.trim())
+  const safeService = service ? escHtml(String(service).slice(0, 200)) : ''
+  const safeMsg     = escHtml(message.trim()).replace(/\n/g, '<br>')
+
   try {
     await transporter.sendMail({
-      from:    `"${firstName} ${lastName}" <${process.env.SMTP_USER}>`,
+      from:    `"RAE Website" <${process.env.SMTP_USER}>`,
       to:      process.env.RECIPIENT_EMAIL,
-      replyTo: email,
-      subject: `RAE Enquiry${service ? ` — ${service}` : ''} from ${firstName} ${lastName}`,
+      replyTo: safeEmail,
+      subject: `RAE Enquiry${safeService ? ` — ${safeService}` : ''} from ${safeFirst} ${safeLast}`,
       html: `
         <h2>New Enquiry from RAE Website</h2>
-        <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        ${service ? `<p><strong>Service:</strong> ${service}</p>` : ''}
+        <p><strong>Name:</strong> ${safeFirst} ${safeLast}</p>
+        <p><strong>Email:</strong> ${safeEmail}</p>
+        ${safeService ? `<p><strong>Service:</strong> ${safeService}</p>` : ''}
         <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br>')}</p>
+        <p>${safeMsg}</p>
       `,
     })
 
