@@ -1,40 +1,21 @@
-name: Build & Deploy to cPanel
+name: Deploy to cPanel
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:
-
-concurrency:
-  group: deploy
-  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Pull latest code from GitHub
+        run: |
+          curl -s -X POST "https://wonderweb.host:2083/execute/VersionControl/update" \
+            -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
+            -d "repository=/home/righteou/REA_AFRICA"
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Deploy to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server:   ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
-          dangerous-clean-slate: false
+      - name: Deploy HEAD Commit
+        run: |
+          curl -s -X POST "https://wonderweb.host:2083/execute/VersionControl/create_deploy" \
+            -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
+            -d "repository=/home/righteou/REA_AFRICA"
