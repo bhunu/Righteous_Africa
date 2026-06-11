@@ -19,3 +19,9 @@ jobs:
           curl -s -X POST "https://wonderweb.host:2083/execute/VersionControl/create_deploy" \
             -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
             -d "repository=/home/righteou/REA_AFRICA"
+
+      - name: Restart Node.js App
+        run: |
+          curl -s -X POST "https://wonderweb.host:2083/execute/NodeJS/restart_app" \
+            -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
+            -d "app_root=REA_AFRICA"
