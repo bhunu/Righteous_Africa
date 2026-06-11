@@ -1109,6 +1109,23 @@ a.c-val:hover { color: var(--red); }
 .footer-bottom p { font-size: .8rem; color: rgba(255,255,255,.28); }
 .footer-motto     { font-style: italic; }
 
+.footer-dev {
+  border-top: 1px solid rgba(255,255,255,.07);
+  padding: .875rem 0 0;
+  text-align: center;
+  font-size: .72rem;
+  color: rgba(255,255,255,.2);
+  letter-spacing: .04em;
+}
+.footer-dev-link {
+  color: rgba(255,255,255,.38);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color .2s;
+}
+.footer-dev-link:hover { color: var(--red); }
+.footer-dev-sep { margin: 0 .45rem; opacity: .4; }
+
 /* ─── DIASPORA ────────────────────────────────────────────────────────────── */
 .dsp-section { overflow: hidden; }
 

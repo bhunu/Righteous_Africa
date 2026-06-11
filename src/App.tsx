@@ -1210,6 +1210,12 @@ export default function App() {
             <p>&copy; {new Date().getFullYear()} Righteous African Equities. All rights reserved.</p>
             <p className="footer-motto">"....building Africa's Next Generation of Enterprises"</p>
           </div>
+          <div className="footer-dev">
+            <span>Designed &amp; Developed by&nbsp;</span>
+            <a href="tel:+263775712114" className="footer-dev-link">CloudTech</a>
+            <span className="footer-dev-sep">·</span>
+            <a href="tel:+263775712114" className="footer-dev-link">+263 775 712 114</a>
+          </div>
         </div>
       </footer>
     </div>
