@@ -8,26 +8,29 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Pull latest code from GitHub
+      - name: Pull latest code on cPanel
         run: |
-          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "https://wonderweb.host:2083/execute/VersionControl/update" \
-            -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
-            -d "repository=/home/righteou/REA_AFRICA")
-          echo "$RESPONSE"
-          echo "$RESPONSE" | grep -q '"status":1' || (echo "ERROR: update failed" && exit 1)
+          curl -s --max-time 30 -X POST \
+            "https://wonderweb.host:2083/execute/VersionControl/update" \
+            -H "Authorization: cpanel righteou:${{ secrets.CPANEL_TOKEN }}" \
+            -d "repository=/home/righteou/REA_AFRICA" \
+            | tee /tmp/update.json
+          grep -q '"status":1' /tmp/update.json || { echo "Update failed:"; cat /tmp/update.json; exit 1; }
 
-      - name: Deploy HEAD Commit
+      - name: Run deployment tasks (.cpanel.yml)
         run: |
-          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "https://wonderweb.host:2083/execute/VersionControl/create_deploy" \
-            -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
-            -d "repository=/home/righteou/REA_AFRICA")
-          echo "$RESPONSE"
-          echo "$RESPONSE" | grep -q '"status":1' || (echo "ERROR: deploy failed" && exit 1)
+          curl -s --max-time 120 -X POST \
+            "https://wonderweb.host:2083/execute/VersionControl/create_deploy" \
+            -H "Authorization: cpanel righteou:${{ secrets.CPANEL_TOKEN }}" \
+            -d "repository=/home/righteou/REA_AFRICA" \
+            | tee /tmp/deploy.json
+          grep -q '"status":1' /tmp/deploy.json || { echo "Deploy failed:"; cat /tmp/deploy.json; exit 1; }
 
-      - name: Restart Node.js App
+      - name: Restart Node.js app
         run: |
-          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "https://wonderweb.host:2083/execute/NodeJS/restart_app" \
-            -H "Authorization: cpanel ${{ secrets.CPANEL_USER }}:${{ secrets.CPANEL_TOKEN }}" \
-            -d "app_root=REA_AFRICA")
-          echo "$RESPONSE"
-          echo "$RESPONSE" | grep -q '"status":1' || (echo "ERROR: restart failed" && exit 1)
+          curl -s --max-time 30 -X POST \
+            "https://wonderweb.host:2083/execute/NodeJS/restart_app" \
+            -H "Authorization: cpanel righteou:${{ secrets.CPANEL_TOKEN }}" \
+            -d "app_root=REA_AFRICA" \
+            | tee /tmp/restart.json
+          grep -q '"status":1' /tmp/restart.json || { echo "Restart failed:"; cat /tmp/restart.json; exit 1; }
