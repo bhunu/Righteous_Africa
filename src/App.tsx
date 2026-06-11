@@ -1139,7 +1139,7 @@ export default function App() {
                   </div>
                   <div>
                     <div className="c-label">Email</div>
-                    <a href="mailto:raewealth@gmail.com" className="c-val">raewealth@gmail.com</a>
+                    <a href="mailto:info@righteousafrica.com" className="c-val">info@righteousafrica.com</a>
                   </div>
                 </div>
                 <div className="contact-row">
@@ -1175,7 +1175,7 @@ export default function App() {
               </p>
               <div className="footer-contacts">
                 <a href="tel:+263776283368">+263 776 283 368</a>
-                <a href="mailto:raewealth@gmail.com">raewealth@gmail.com</a>
+                <a href="mailto:info@righteousafrica.com">info@righteousafrica.com</a>
               </div>
             </div>
 
