@@ -11,7 +11,21 @@ try {
 
 const app = express()
 
-app.use(helmet())
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc:     ["'self'"],
+      scriptSrc:      ["'self'", "'unsafe-inline'"],
+      styleSrc:       ["'self'", "'unsafe-inline'"],
+      imgSrc:         ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://*.unsplash.com"],
+      fontSrc:        ["'self'", "data:"],
+      connectSrc:     ["'self'"],
+      frameSrc:       ["'none'"],
+      objectSrc:      ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  },
+}))
 
 const ALLOWED_ORIGINS = [
   'https://righteousafrica.com',
