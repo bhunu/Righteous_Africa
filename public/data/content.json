@@ -89,11 +89,11 @@
   ],
   "packages": [
     {
-      "id": "5e9ab673-5559-48cc-8ab5-698e95bd7221",
+      "id": "84dce86f-ceb7-440a-98c0-8af3b897d9e8",
       "name": "Just Start Pack",
       "price": "$220",
       "period": "Once Off",
-      "featured": true,
+      "featured": false,
       "features": [
         "Company profile + reviews",
         "Logo design + revisions",
@@ -103,7 +103,7 @@
       ]
     },
     {
-      "id": "f8ed52c4-a371-4e32-8d60-3c28895890f3",
+      "id": "8f1ac256-d80a-42ed-8738-f2f5f74c051e",
       "name": "Startup Package",
       "price": "$250",
       "period": "/ Month",
@@ -116,11 +116,11 @@
       ]
     },
     {
-      "id": "bfc443f5-7fb9-417b-b591-0bc0f5dba1a6",
+      "id": "d5415865-bf47-42b9-9a80-b7562518f9e6",
       "name": "SME Growth Package",
       "price": "$400",
       "period": "/ Month",
-      "featured": false,
+      "featured": true,
       "features": [
         "Accounting",
         "Tax advisory",
@@ -131,7 +131,7 @@
       ]
     },
     {
-      "id": "4d90a27a-849a-4ccd-b787-905fb7bc271c",
+      "id": "da218490-82b8-46ba-98c7-591a04587a59",
       "name": "Corporate Finance",
       "price": "$1,000",
       "period": "/ Month",
