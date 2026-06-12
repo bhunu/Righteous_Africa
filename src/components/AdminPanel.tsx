@@ -34,8 +34,35 @@ async function changePin(newPin: string) {
 
 const GH_OWNER = 'bhunu'
 const GH_REPO  = 'Righteous_Africa'
-const GH_FILE  = 'public/data/content.json'
 const GH_API   = 'https://api.github.com'
+
+async function publishFile(
+  headers: Record<string, string>,
+  filePath: string,
+  b64: string,
+  message: string,
+): Promise<void> {
+  let sha: string | undefined
+  const getRes = await fetch(`${GH_API}/repos/${GH_OWNER}/${GH_REPO}/contents/${filePath}`, { headers })
+  if (getRes.ok) {
+    const fileData = await getRes.json() as { sha: string }
+    sha = fileData.sha
+  } else if (getRes.status !== 404) {
+    const e = await getRes.json().catch(() => ({}))
+    throw new Error((e as { message?: string }).message || `GitHub API error ${getRes.status}`)
+  }
+
+  const putRes = await fetch(`${GH_API}/repos/${GH_OWNER}/${GH_REPO}/contents/${filePath}`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ message, content: b64, ...(sha ? { sha } : {}), branch: 'main' }),
+  })
+
+  if (!putRes.ok) {
+    const e = await putRes.json().catch(() => ({}))
+    throw new Error((e as { message?: string }).message || `Publish failed (${putRes.status})`)
+  }
+}
 
 async function publishToGitHub(pat: string, content: SiteContent): Promise<void> {
   const headers = {
@@ -48,33 +75,12 @@ async function publishToGitHub(pat: string, content: SiteContent): Promise<void>
   const jsonStr = JSON.stringify(content, null, 2)
   const b64 = btoa(Array.from(new TextEncoder().encode(jsonStr), b => String.fromCharCode(b)).join(''))
   const now = new Date().toISOString().slice(0, 10)
+  const message = `content: update site content (${now})`
 
-  // GET existing file SHA (needed for updates). 404 means file doesn't exist yet — create it without sha.
-  let sha: string | undefined
-  const getRes = await fetch(`${GH_API}/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, { headers })
-  if (getRes.ok) {
-    const fileData = await getRes.json() as { sha: string }
-    sha = fileData.sha
-  } else if (getRes.status !== 404) {
-    const e = await getRes.json().catch(() => ({}))
-    throw new Error((e as { message?: string }).message || `GitHub API error ${getRes.status}`)
-  }
-
-  const putRes = await fetch(`${GH_API}/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
-    method: 'PUT',
-    headers,
-    body: JSON.stringify({
-      message: `content: update blog and opportunities (${now})`,
-      content: b64,
-      ...(sha ? { sha } : {}),
-      branch: 'main',
-    }),
-  })
-
-  if (!putRes.ok) {
-    const e = await putRes.json().catch(() => ({}))
-    throw new Error((e as { message?: string }).message || `Publish failed (${putRes.status})`)
-  }
+  // Write to both the source file and the served dist file so the live site
+  // reflects changes immediately without needing a rebuild.
+  await publishFile(headers, 'public/data/content.json', b64, message)
+  await publishFile(headers, 'dist/data/content.json', b64, message)
 }
 
 // ─── Shared modal ─────────────────────────────────────────────────────────────
