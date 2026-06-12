@@ -1480,7 +1480,7 @@ a.c-val:hover { color: var(--red); }
   .dsp-banner    { padding: 4rem 0; }
   .dsp-metrics   { grid-template-columns: 1fr 1fr; }
   .dsp-why       { padding: 4rem 0; }
-  .dsp-why-grid  { grid-template-columns: 1fr; }
+  .dsp-why-grid  { display: flex; }
   .dsp-opp-slider .dsp-opp-card { flex: 0 0 calc(100vw - 5rem); min-width: calc(100vw - 5rem); }
   .blog-grid .blog-card { flex: 0 0 calc(100vw - 5rem); min-width: calc(100vw - 5rem); }
   .opp-grid .opp-card  { flex: 0 0 calc(100vw - 5rem); min-width: calc(100vw - 5rem); }
@@ -2350,21 +2350,27 @@ a.c-val:hover { color: var(--red); }
 }
 .form-submit:disabled { opacity: .65; cursor: not-allowed; }
 
-/* ─── WHO WE SERVE — mobile 1-up auto-slider ────────────────────── */
+/* ─── SECTORS — mobile 2-column grid ────────────────────────────── */
 @media (max-width: 768px) {
   .sec-grid {
-    display: grid;
-    grid-template-columns: unset;
-    grid-template-rows: unset;
-    grid-auto-flow: column;
-    grid-auto-columns: calc(100vw - 3rem);
+    grid-template-columns: 1fr 1fr;
     gap: .75rem;
+  }
+}
+
+/* ─── WHY DIASPORA — mobile 1-up auto-slider ────────────────────── */
+@media (max-width: 768px) {
+  .dsp-why-grid {
+    flex-wrap: nowrap;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding-bottom: .25rem;
+    gap: 0;
   }
-  .sec-grid::-webkit-scrollbar { display: none; }
-  .sec-tile { scroll-snap-align: start; }
+  .dsp-why-grid::-webkit-scrollbar { display: none; }
+  .dsp-why-card {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
 }

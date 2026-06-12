@@ -708,10 +708,10 @@ export default function App() {
   const dspSrvRef = useRef<HTMLDivElement>(null)
   useAutoScroll(dspSrvRef, '.srv-card')
 
-  const sectorRef = useRef<HTMLDivElement>(null)
-  useAutoScroll(sectorRef, '.sec-tile', 12)
+  const dspWhyRef = useRef<HTMLDivElement>(null)
+  useAutoScroll(dspWhyRef, '.dsp-why-card', 0)
 
-  const [srvExp,    setSrvExp]    = useState<Set<string>>(new Set())
+const [srvExp,    setSrvExp]    = useState<Set<string>>(new Set())
   const [dspSrvExp, setDspSrvExp] = useState<Set<string>>(new Set())
   const [dspOppExp, setDspOppExp] = useState<Set<number>>(new Set())
 
@@ -931,7 +931,7 @@ export default function App() {
               <h2 className="rae-h2">Built for Africans Abroad</h2>
               <p className="sec-lead">Five reasons the diaspora trusts Righteous African Equities to manage their investments back home.</p>
             </div>
-            <div className="dsp-why-grid">
+            <div className="dsp-why-grid" ref={dspWhyRef}>
               {DIASPORA_WHY.map((w, i) => (
                 <div key={i} className="dsp-why-card">
                   <div className="dsp-why-num">0{i + 1}</div>
@@ -1053,7 +1053,7 @@ export default function App() {
             <h2 className="rae-h2">Sectors We Support</h2>
             <p className="sec-lead">We partner with businesses across diverse, high-impact industries driving Africa's economic transformation.</p>
           </div>
-          <div className="sec-grid" ref={sectorRef}>
+          <div className="sec-grid">
             {SECTORS.map(s => (
               <div key={s} className="sec-tile">
                 <div className="sec-tile-dot" />
