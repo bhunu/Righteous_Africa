@@ -444,7 +444,7 @@ const emptyPkg = (): Omit<Package, 'id'> => ({
   name: '', price: '$', period: '/ Month', featured: false, features: [''],
 })
 
-function PackageManager({ packages, onChange }: { packages: Package[]; onChange: (p: Package[]) => void }) {
+function PackageManager({ packages, onChange, defaultPackages }: { packages: Package[]; onChange: (p: Package[]) => void; defaultPackages: Package[] }) {
   const [editing, setEditing] = useState<Package | null>(null)
   const [isNew, setIsNew] = useState(false)
   const [form, setForm] = useState(emptyPkg())
@@ -495,7 +495,15 @@ function PackageManager({ packages, onChange }: { packages: Package[]; onChange:
       </p>
 
       {packages.length === 0 && (
-        <p className="adm-empty">No custom packages yet — the site is showing built-in defaults. Add one to override them.</p>
+        <div className="adm-empty">
+          <p>No custom packages yet — the site is showing built-in defaults.</p>
+          <button
+            className="adm-btn-load-defaults"
+            onClick={() => onChange(defaultPackages.map(p => ({ ...p, id: crypto.randomUUID() })))}
+          >
+            Load defaults to edit
+          </button>
+        </div>
       )}
 
       <div className="adm-list">
@@ -833,9 +841,10 @@ interface Props {
   content: SiteContent
   onContentChange: (c: SiteContent) => void
   onExit: () => void
+  defaultPackages: Package[]
 }
 
-export default function AdminPanel({ content, onContentChange, onExit }: Props) {
+export default function AdminPanel({ content, onContentChange, onExit, defaultPackages }: Props) {
   const [authed, setAuthed] = useState(false)
   const [tab, setTab] = useState<Tab>('blog')
   const [showPublish, setShowPublish] = useState(false)
@@ -948,6 +957,7 @@ export default function AdminPanel({ content, onContentChange, onExit }: Props) 
           <PackageManager
             packages={content.packages ?? []}
             onChange={pkgs => updateContent({ ...content, packages: pkgs })}
+            defaultPackages={defaultPackages}
           />
         )}
         {tab === 'settings' && <SettingsPanel />}

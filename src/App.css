@@ -1880,7 +1880,19 @@ a.c-val:hover { color: var(--red); }
   transition: background var(--ease);
 }
 .adm-btn-add:hover { background: var(--red-dk); }
-.adm-empty { color: var(--mid); font-size: .9rem; padding: 2rem 0; }
+.adm-empty { color: var(--mid); font-size: .9rem; padding: 2rem 0; display: flex; flex-direction: column; align-items: flex-start; gap: .75rem; }
+.adm-btn-load-defaults {
+  background: transparent;
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  padding: .45rem 1rem;
+  border-radius: 6px;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--ease), color var(--ease);
+}
+.adm-btn-load-defaults:hover { background: var(--red); color: #fff; }
 
 /* List */
 .adm-list { display: flex; flex-direction: column; gap: .6rem; }

@@ -750,6 +750,7 @@ const [srvExp,    setSrvExp]    = useState<Set<string>>(new Set())
         content={siteContent}
         onContentChange={setSiteContent}
         onExit={() => setAdminMode(false)}
+        defaultPackages={DEFAULT_PACKAGES}
       />
     )
   }
