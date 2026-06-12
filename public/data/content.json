@@ -89,16 +89,62 @@
   ],
   "packages": [
     {
-      "name": "On Promotion",
-      "price": "$800",
+      "name": "JUST START PACK",
+      "price": "$220",
       "period": "Once Off",
-      "featured": false,
+      "featured": true,
       "features": [
-        "company reg",
-        "huhu",
-        "huhuyyyffr"
+        "Company profile + reviews",
+        "Logo Design + reviews",
+        "Email Registration",
+        "Business chip card",
+        "2 startup receipt books"
       ],
       "id": "2e7c1020-cd5d-4666-ba42-5aed02c4d45c"
+    },
+    {
+      "name": "STARTUP PACKAGES",
+      "price": "$250",
+      "period": "/ Month",
+      "featured": false,
+      "features": [
+        "Basic accounting",
+        "Zimra Compliance reminders & support",
+        "Payroll support",
+        "Monthly management accounts"
+      ],
+      "id": "ba28771d-4232-46a4-b37c-098522919aaa"
+    },
+    {
+      "name": "SME Growth Package",
+      "price": "$400",
+      "period": "/ Month",
+      "featured": false,
+      "features": [
+        "Accounting",
+        "Tax Advisory",
+        "Cash flow forecasting",
+        "Budgeting ",
+        "Business Advisory meetings",
+        "Monthly reports"
+      ],
+      "id": "2aeacbd4-0373-404f-a03c-cf68950160ce"
+    },
+    {
+      "name": "Corporate Finance Package",
+      "price": "$1000",
+      "period": "/ Month",
+      "featured": false,
+      "features": [
+        "Accounting",
+        "Financial modeling",
+        "Investor readiness",
+        "Fundraising support",
+        "Board Reporting ",
+        "Expansion strategy",
+        "Monthly Reports"
+      ],
+      "id": "d85c7a38-9f15-499c-a9ea-500f445376b7"
     }
   ]
 }
