@@ -2350,14 +2350,14 @@ a.c-val:hover { color: var(--red); }
 }
 .form-submit:disabled { opacity: .65; cursor: not-allowed; }
 
-/* ─── WHO WE SERVE — mobile 4-up slider (2 cols × 2 rows, snap per page) ─── */
+/* ─── WHO WE SERVE — mobile 1-up auto-slider ────────────────────── */
 @media (max-width: 768px) {
   .sec-grid {
     display: grid;
     grid-template-columns: unset;
-    grid-template-rows: repeat(2, auto);
+    grid-template-rows: unset;
     grid-auto-flow: column;
-    grid-auto-columns: calc((100vw - 5rem) / 2);
+    grid-auto-columns: calc(100vw - 3rem);
     gap: .75rem;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -2366,7 +2366,5 @@ a.c-val:hover { color: var(--red); }
     padding-bottom: .25rem;
   }
   .sec-grid::-webkit-scrollbar { display: none; }
-  /* snap at the start of every group of 4 (every 2 columns) */
-  .sec-tile                  { scroll-snap-align: none; }
-  .sec-tile:nth-child(4n+1)  { scroll-snap-align: start; }
+  .sec-tile { scroll-snap-align: start; }
 }
