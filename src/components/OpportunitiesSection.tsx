@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import type { Opportunity } from '../data/types'
 
 const STATUS_CLS: Record<string, string> = {
@@ -10,6 +10,10 @@ const STATUS_CLS: Record<string, string> = {
 export default function OpportunitiesSection({ opportunities }: { opportunities: Opportunity[] }) {
   const visible = opportunities.filter(o => o.status !== 'Closed')
   const sliderRef = useRef<HTMLDivElement>(null)
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+  const toggle = (id: string) => setExpanded(prev => {
+    const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
 
   useEffect(() => {
     const el = sliderRef.current
@@ -47,7 +51,7 @@ export default function OpportunitiesSection({ opportunities }: { opportunities:
           <div className="opp-slider" ref={sliderRef}>
             <div className="opp-grid">
               {visible.map(opp => (
-                <div key={opp.id} className="opp-card">
+                <div key={opp.id} className={`opp-card${expanded.has(opp.id) ? ' card--expanded' : ''}`}>
                   <div className="opp-head">
                     <div className="opp-badges">
                       <span className="opp-sector">{opp.sector}</span>
@@ -97,7 +101,12 @@ export default function OpportunitiesSection({ opportunities }: { opportunities:
                     )}
                   </div>
 
-                  <a href="#contact" className="opp-cta">Express Interest</a>
+                  <button className="opp-cta opp-cta--expand" onClick={() => toggle(opp.id)}>
+                    {expanded.has(opp.id) ? 'Show less' : 'Read more'}
+                  </button>
+                  {expanded.has(opp.id) && (
+                    <a href="#contact" className="opp-cta">Express Interest</a>
+                  )}
                 </div>
               ))}
             </div>

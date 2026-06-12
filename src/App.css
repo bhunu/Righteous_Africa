@@ -2267,6 +2267,23 @@ a.c-val:hover { color: var(--red); }
 .form-feedback--ok  { background: #e6f9f0; color: #1a7a4a; border: 1px solid #a3dfc0; }
 .form-feedback--err { background: #fdecea; color: #c0392b; border: 1px solid #f5a9a3; }
 
+/* ─── EXPAND / COLLAPSE (card--expanded removes line-clamp) ────────────────── */
+@media (max-width: 768px) {
+  .srv-card.card--expanded    .srv-desc     { -webkit-line-clamp: unset; display: block; overflow: visible; }
+  .blog-card.card--expanded   .blog-excerpt { -webkit-line-clamp: unset; display: block; overflow: visible; }
+  .opp-card.card--expanded    .opp-desc     { -webkit-line-clamp: unset; display: block; overflow: visible; flex: none; }
+  .opp-card.card--expanded    .opp-highlights { display: flex; }
+  .dsp-opp-card.card--expanded .dsp-opp-desc { -webkit-line-clamp: unset; display: block; overflow: visible; flex: none; }
+  .opp-cta--expand {
+    background: var(--gray-bg);
+    color: var(--black);
+    border: 1px solid var(--border);
+    margin-bottom: .5rem;
+  }
+  .opp-cta--expand:hover { background: var(--border); }
+  .srv-more, .dsp-opp-more { background: none; border: none; padding: 0; font-family: inherit; cursor: pointer; }
+}
+
 /* ─── MOBILE CARD OVERRIDES (must stay at end of file to win cascade) ──────── */
 @media (max-width: 768px) {
   /* blog cards */

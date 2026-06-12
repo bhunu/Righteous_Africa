@@ -1,9 +1,13 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import type { BlogPost } from '../data/types'
 
 export default function BlogSection({ posts }: { posts: BlogPost[] }) {
   const published = posts.filter(p => p.published)
   const sliderRef = useRef<HTMLDivElement>(null)
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+  const toggle = (id: string) => setExpanded(prev => {
+    const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
 
   useEffect(() => {
     const el = sliderRef.current
@@ -39,7 +43,7 @@ export default function BlogSection({ posts }: { posts: BlogPost[] }) {
           <div className="blog-slider" ref={sliderRef}>
             <div className="blog-grid">
               {published.map(post => (
-                <article key={post.id} className="blog-card">
+                <article key={post.id} className={`blog-card${expanded.has(post.id) ? ' card--expanded' : ''}`}>
                   {post.image && (
                     <div className="blog-img-wrap">
                       <img src={post.image} alt={post.title} className="blog-img" loading="lazy" />
@@ -58,13 +62,13 @@ export default function BlogSection({ posts }: { posts: BlogPost[] }) {
                     </div>
                     <h3 className="blog-title">{post.title}</h3>
                     <p className="blog-excerpt">{post.excerpt}</p>
-                    <a href="#contact" className="srv-more">
-                      Read more
+                    <button className="srv-more" onClick={() => toggle(post.id)}>
+                      {expanded.has(post.id) ? 'Show less' : 'Read more'}
                       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
-                        strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
+                        strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true">
                         <path d="M3 8h10M8 3l5 5-5 5" />
                       </svg>
-                    </a>
+                    </button>
                   </div>
                 </article>
               ))}

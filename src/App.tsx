@@ -704,6 +704,14 @@ export default function App() {
   const dspSrvRef = useRef<HTMLDivElement>(null)
   useAutoScroll(dspSrvRef, '.srv-card')
 
+  const [srvExp,    setSrvExp]    = useState<Set<string>>(new Set())
+  const [dspSrvExp, setDspSrvExp] = useState<Set<string>>(new Set())
+  const [dspOppExp, setDspOppExp] = useState<Set<number>>(new Set())
+
+  function toggle<T>(set: Set<T>, setFn: React.Dispatch<React.SetStateAction<Set<T>>>, key: T) {
+    setFn(prev => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n })
+  }
+
   if (adminMode) {
     return (
       <AdminPanel
@@ -792,14 +800,14 @@ export default function App() {
           <div className="srv-slider" ref={srvRef}>
             <div className="srv-grid">
               {SERVICES.map(s => (
-                <div key={s.id} className="srv-card">
+                <div key={s.id} className={`srv-card${srvExp.has(s.id) ? ' card--expanded' : ''}`}>
                   <div className="srv-icon">{SERVICE_ICONS[s.id]}</div>
                   <h3 className="srv-title">{s.title}</h3>
                   <p className="srv-desc">{s.desc}</p>
-                  <a href="#contact" className="srv-more">
-                    Learn more
-                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
-                  </a>
+                  <button className="srv-more" onClick={() => toggle(srvExp, setSrvExp, s.id)}>
+                    {srvExp.has(s.id) ? 'Show less' : 'Read more'}
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+                  </button>
                 </div>
               ))}
             </div>
@@ -894,14 +902,14 @@ export default function App() {
             <div className="srv-slider" ref={dspSrvRef}>
               <div className="srv-grid">
                 {DIASPORA_SERVICES.map(s => (
-                  <div key={s.id} className="srv-card">
+                  <div key={s.id} className={`srv-card${dspSrvExp.has(s.id) ? ' card--expanded' : ''}`}>
                     <div className="srv-icon">{DIASPORA_ICONS[s.id]}</div>
                     <h3 className="srv-title">{s.title}</h3>
                     <p className="srv-desc">{s.desc}</p>
-                    <a href="#contact" className="srv-more">
-                      Enquire now
-                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
-                    </a>
+                    <button className="srv-more" onClick={() => toggle(dspSrvExp, setDspSrvExp, s.id)}>
+                      {dspSrvExp.has(s.id) ? 'Show less' : 'Read more'}
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+                    </button>
                   </div>
                 ))}
               </div>
@@ -937,17 +945,17 @@ export default function App() {
             </div>
             <div className="dsp-opp-slider" ref={dspOppRef}>
               {DIASPORA_OPPS.map((o, i) => (
-                <div key={i} className="dsp-opp-card">
+                <div key={i} className={`dsp-opp-card${dspOppExp.has(i) ? ' card--expanded' : ''}`}>
                   <div className="dsp-opp-icon">{DIASPORA_OPP_ICONS[i]}</div>
                   <h4 className="dsp-opp-title">{o.title}</h4>
                   <p className="dsp-opp-desc">{o.desc}</p>
-                  <a href="#contact" className="dsp-opp-more">
-                    Read more
+                  <button className="dsp-opp-more" onClick={() => toggle(dspOppExp, setDspOppExp, i)}>
+                    {dspOppExp.has(i) ? 'Show less' : 'Read more'}
                     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
                       strokeLinecap="round" strokeLinejoin="round" width="12" height="12" aria-hidden="true">
                       <path d="M3 8h10M8 3l5 5-5 5"/>
                     </svg>
-                  </a>
+                  </button>
                 </div>
               ))}
             </div>
