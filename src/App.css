@@ -2349,3 +2349,24 @@ a.c-val:hover { color: var(--red); }
   .opp-financials { padding-top: .5rem; }
 }
 .form-submit:disabled { opacity: .65; cursor: not-allowed; }
+
+/* ─── WHO WE SERVE — mobile 4-up slider (2 cols × 2 rows, snap per page) ─── */
+@media (max-width: 768px) {
+  .sec-grid {
+    display: grid;
+    grid-template-columns: unset;
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100vw - 5rem) / 2);
+    gap: .75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding-bottom: .25rem;
+  }
+  .sec-grid::-webkit-scrollbar { display: none; }
+  /* snap at the start of every group of 4 (every 2 columns) */
+  .sec-tile                  { scroll-snap-align: none; }
+  .sec-tile:nth-child(4n+1)  { scroll-snap-align: start; }
+}
