@@ -89,7 +89,7 @@
   ],
   "packages": [
     {
-      "id": "84dce86f-ceb7-440a-98c0-8af3b897d9e8",
+      "id": "63b685af-f537-48d5-a2a0-f1ad5315e4d6",
       "name": "Just Start Pack",
       "price": "$220",
       "period": "Once Off",
@@ -103,11 +103,11 @@
       ]
     },
     {
-      "id": "8f1ac256-d80a-42ed-8738-f2f5f74c051e",
+      "id": "dab7cafd-4a4c-4361-80b8-6a16f607f29b",
       "name": "Startup Package",
       "price": "$250",
       "period": "/ Month",
-      "featured": false,
+      "featured": true,
       "features": [
         "Basic accounting",
         "ZIMRA compliance reminders & support",
@@ -116,11 +116,11 @@
       ]
     },
     {
-      "id": "d5415865-bf47-42b9-9a80-b7562518f9e6",
+      "id": "5784ecaa-ae1a-41eb-903b-7c03f3a8a58a",
       "name": "SME Growth Package",
       "price": "$400",
       "period": "/ Month",
-      "featured": true,
+      "featured": false,
       "features": [
         "Accounting",
         "Tax advisory",
@@ -131,7 +131,7 @@
       ]
     },
     {
-      "id": "da218490-82b8-46ba-98c7-591a04587a59",
+      "id": "b5fa9505-896e-43ff-99ee-8349faaf4c42",
       "name": "Corporate Finance",
       "price": "$1,000",
       "period": "/ Month",
