@@ -155,6 +155,7 @@ function BlogManager({ posts, onChange }: { posts: BlogPost[]; onChange: (p: Blo
   const [editing, setEditing] = useState<BlogPost | null>(null)
   const [isNew, setIsNew] = useState(false)
   const [form, setForm] = useState(emptyPost())
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
   function openNew() { setForm(emptyPost()); setIsNew(true); setEditing({ id: '', ...emptyPost() }) }
   function openEdit(p: BlogPost) { setForm({ ...p }); setIsNew(false); setEditing(p) }
@@ -171,7 +172,8 @@ function BlogManager({ posts, onChange }: { posts: BlogPost[]; onChange: (p: Blo
   }
 
   function remove(id: string) {
-    if (confirm('Delete this post?')) onChange(posts.filter(p => p.id !== id))
+    onChange(posts.filter(p => p.id !== id))
+    setPendingDeleteId(null)
   }
 
   function togglePublished(id: string) {
@@ -203,11 +205,21 @@ function BlogManager({ posts, onChange }: { posts: BlogPost[]; onChange: (p: Blo
               </div>
             </div>
             <div className="adm-list-actions">
-              <button className="adm-act" onClick={() => togglePublished(p.id)} title={p.published ? 'Unpublish' : 'Publish'}>
-                {p.published ? '⊙' : '○'}
-              </button>
-              <button className="adm-act" onClick={() => openEdit(p)}>Edit</button>
-              <button className="adm-act adm-act--del" onClick={() => remove(p.id)}>Delete</button>
+              {pendingDeleteId === p.id ? (
+                <>
+                  <span style={{ fontSize: '.8rem', color: 'var(--mid)' }}>Delete?</span>
+                  <button className="adm-act adm-act--del" onClick={() => remove(p.id)}>Yes</button>
+                  <button className="adm-act" onClick={() => setPendingDeleteId(null)}>No</button>
+                </>
+              ) : (
+                <>
+                  <button className="adm-act" onClick={() => togglePublished(p.id)} title={p.published ? 'Unpublish' : 'Publish'}>
+                    {p.published ? '⊙' : '○'}
+                  </button>
+                  <button className="adm-act" onClick={() => openEdit(p)}>Edit</button>
+                  <button className="adm-act adm-act--del" onClick={() => setPendingDeleteId(p.id)}>Delete</button>
+                </>
+              )}
             </div>
           </div>
         ))}
@@ -286,6 +298,7 @@ function OppManager({ opportunities, onChange }: { opportunities: Opportunity[];
   const [editing, setEditing] = useState<Opportunity | null>(null)
   const [isNew, setIsNew] = useState(false)
   const [form, setForm] = useState(emptyOpp())
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
   function openNew() { setForm(emptyOpp()); setIsNew(true); setEditing({ id: '', ...emptyOpp() }) }
   function openEdit(o: Opportunity) { setForm({ ...o, highlights: [...o.highlights] }); setIsNew(false); setEditing(o) }
@@ -303,7 +316,8 @@ function OppManager({ opportunities, onChange }: { opportunities: Opportunity[];
   }
 
   function remove(id: string) {
-    if (confirm('Delete this opportunity?')) onChange(opportunities.filter(o => o.id !== id))
+    onChange(opportunities.filter(o => o.id !== id))
+    setPendingDeleteId(null)
   }
 
   const f = (k: keyof typeof form, v: string) => setForm(prev => ({ ...prev, [k]: v }))
@@ -337,8 +351,18 @@ function OppManager({ opportunities, onChange }: { opportunities: Opportunity[];
               </div>
             </div>
             <div className="adm-list-actions">
-              <button className="adm-act" onClick={() => openEdit(o)}>Edit</button>
-              <button className="adm-act adm-act--del" onClick={() => remove(o.id)}>Delete</button>
+              {pendingDeleteId === o.id ? (
+                <>
+                  <span style={{ fontSize: '.8rem', color: 'var(--mid)' }}>Delete?</span>
+                  <button className="adm-act adm-act--del" onClick={() => remove(o.id)}>Yes</button>
+                  <button className="adm-act" onClick={() => setPendingDeleteId(null)}>No</button>
+                </>
+              ) : (
+                <>
+                  <button className="adm-act" onClick={() => openEdit(o)}>Edit</button>
+                  <button className="adm-act adm-act--del" onClick={() => setPendingDeleteId(o.id)}>Delete</button>
+                </>
+              )}
             </div>
           </div>
         ))}
@@ -438,7 +462,7 @@ function SettingsPanel() {
   }
 
   // ── GitHub token ──
-  const [savedPat,    setSavedPat]    = useState(() => localStorage.getItem(PAT_KEY) || '')
+  const [savedPat,    setSavedPat]    = useState(() => sessionStorage.getItem(PAT_KEY) || '')
   const [newPat,      setNewPat]      = useState('')
   const [showNewPat,  setShowNewPat]  = useState(false)
   const [patMsg,      setPatMsg]      = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
@@ -449,7 +473,7 @@ function SettingsPanel() {
 
   function savePat() {
     if (!newPat.trim()) { setPatMsg({ type: 'err', text: 'Please enter a token.' }); return }
-    localStorage.setItem(PAT_KEY, newPat.trim())
+    sessionStorage.setItem(PAT_KEY, newPat.trim())
     setSavedPat(newPat.trim())
     setNewPat('')
     setPatMsg({ type: 'ok', text: 'Token saved. You will not need to enter it again.' })
@@ -457,7 +481,7 @@ function SettingsPanel() {
 
   function clearPat() {
     if (!window.confirm('Remove the saved GitHub token?')) return
-    localStorage.removeItem(PAT_KEY)
+    sessionStorage.removeItem(PAT_KEY)
     setSavedPat('')
     setPatMsg(null)
   }
@@ -522,7 +546,7 @@ function SettingsPanel() {
       {/* PIN change */}
       <div className="adm-settings-section">
         <h4>Change Admin PIN</h4>
-        <p className="adm-settings-note">Default PIN is <strong>RAE2024</strong>. Change it to something only you know.</p>
+        <p className="adm-settings-note">Change your admin PIN to something only you know.</p>
         <form onSubmit={handlePinChange} className="adm-form adm-form--narrow">
           <div className="adm-fg">
             <label>Current PIN</label>
@@ -555,7 +579,7 @@ function PublishModal({
   onClose: () => void
   onSuccess: () => void
 }) {
-  const [savedPat,  setSavedPat]  = useState(() => localStorage.getItem(PAT_KEY) || '')
+  const [savedPat,  setSavedPat]  = useState(() => sessionStorage.getItem(PAT_KEY) || '')
   const [newPat,    setNewPat]    = useState('')
   const [showPat,   setShowPat]   = useState(false)
   const [changing,  setChanging]  = useState(false)
@@ -565,7 +589,7 @@ function PublishModal({
   async function handlePublish(pat: string) {
     setLoading(true); setError('')
     try {
-      localStorage.setItem(PAT_KEY, pat)
+      sessionStorage.setItem(PAT_KEY, pat)
       setSavedPat(pat)
       await publishToGitHub(pat, content)
       localStorage.removeItem('rae:content')
@@ -687,6 +711,7 @@ export default function AdminPanel({ content, onContentChange, onExit }: Props) 
 
   function handleExit() {
     sessionStorage.removeItem(SESSION_KEY)
+    history.replaceState(null, '', window.location.pathname)
     onExit()
   }
 
@@ -719,16 +744,22 @@ export default function AdminPanel({ content, onContentChange, onExit }: Props) 
 
         <nav className="adm-nav">
           {([
-            { key: 'blog', label: 'Blog Posts', icon: '📝' },
-            { key: 'opportunities', label: 'Opportunities', icon: '💼' },
-            { key: 'settings', label: 'Settings', icon: '⚙️' },
-          ] as { key: Tab; label: string; icon: string }[]).map(item => (
+            { key: 'blog', label: 'Blog Posts', icon: (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            )},
+            { key: 'opportunities', label: 'Opportunities', icon: (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            )},
+            { key: 'settings', label: 'Settings', icon: (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            )},
+          ] as { key: Tab; label: string; icon: React.ReactNode }[]).map(item => (
             <button
               key={item.key}
               className={`adm-nav-item ${tab === item.key ? 'adm-nav-item--on' : ''}`}
               onClick={() => setTab(item.key)}
             >
-              <span className="adm-nav-icon">{item.icon}</span>
+              <span className="adm-nav-icon" style={{ display: 'flex', alignItems: 'center' }}>{item.icon}</span>
               {item.label}
             </button>
           ))}

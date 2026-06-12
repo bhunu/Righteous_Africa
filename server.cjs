@@ -1,5 +1,7 @@
 const express = require('express')
 const cors = require('cors')
+const helmet = require('helmet')
+const rateLimit = require('express-rate-limit')
 const nodemailer = require('nodemailer')
 const { join } = require('path')
 
@@ -8,7 +10,24 @@ try {
 } catch {}
 
 const app = express()
-app.use(cors())
+
+app.use(helmet())
+
+const ALLOWED_ORIGINS = [
+  'https://righteousafrica.com',
+  'https://www.righteousafrica.com',
+  ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:5173', 'http://localhost:5000'] : []),
+]
+app.use(cors({ origin: ALLOWED_ORIGINS }))
+
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again later.' },
+})
+
 app.use(express.json({ limit: '16kb' }))
 app.use(express.static(join(__dirname, 'dist')))
 
@@ -33,8 +52,8 @@ function escHtml(str) {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-app.post('/api/contact', async (req, res) => {
-  const { firstName, lastName, email, service, message } = req.body
+app.post('/api/contact', contactLimiter, async (req, res) => {
+  const { firstName, lastName, email, phone, service, message } = req.body
 
   if (!firstName || !email || !message) {
     return res.status(400).json({ error: 'firstName, email and message are required.' })
@@ -42,6 +61,7 @@ app.post('/api/contact', async (req, res) => {
 
   if (
     typeof firstName !== 'string' || firstName.length > 100 ||
+    typeof lastName  !== 'undefined' && (typeof lastName !== 'string' || lastName.length > 100) ||
     typeof email     !== 'string' || email.length     > 254  ||
     typeof message   !== 'string' || message.length   > 5000
   ) {
@@ -55,6 +75,7 @@ app.post('/api/contact', async (req, res) => {
   const safeFirst   = escHtml(firstName.trim())
   const safeLast    = escHtml((lastName  || '').trim())
   const safeEmail   = escHtml(email.trim())
+  const safePhone   = phone ? escHtml(String(phone).slice(0, 30)) : ''
   const safeService = service ? escHtml(String(service).slice(0, 200)) : ''
   const safeMsg     = escHtml(message.trim()).replace(/\n/g, '<br>')
 
@@ -68,6 +89,7 @@ app.post('/api/contact', async (req, res) => {
         <h2>New Enquiry from RAE Website</h2>
         <p><strong>Name:</strong> ${safeFirst} ${safeLast}</p>
         <p><strong>Email:</strong> ${safeEmail}</p>
+        ${safePhone   ? `<p><strong>Phone / WhatsApp:</strong> ${safePhone}</p>` : ''}
         ${safeService ? `<p><strong>Service:</strong> ${safeService}</p>` : ''}
         <p><strong>Message:</strong></p>
         <p>${safeMsg}</p>

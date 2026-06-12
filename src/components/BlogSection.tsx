@@ -22,6 +22,8 @@ export default function BlogSection({ posts }: { posts: BlogPost[] }) {
     return () => clearInterval(id)
   }, [])
 
+  if (published.length === 0) return null
+
   return (
     <section id="blog" className="sec sec--gray">
       <div className="container">
@@ -56,13 +58,13 @@ export default function BlogSection({ posts }: { posts: BlogPost[] }) {
                     </div>
                     <h3 className="blog-title">{post.title}</h3>
                     <p className="blog-excerpt">{post.excerpt}</p>
-                    <span className="srv-more">
+                    <a href="#contact" className="srv-more">
                       Read more
                       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
                         strokeLinecap="round" strokeLinejoin="round" width="13" height="13">
                         <path d="M3 8h10M8 3l5 5-5 5" />
                       </svg>
-                    </span>
+                    </a>
                   </div>
                 </article>
               ))}

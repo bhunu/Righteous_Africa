@@ -28,6 +28,8 @@ export default function OpportunitiesSection({ opportunities }: { opportunities:
     return () => clearInterval(id)
   }, [])
 
+  if (visible.length === 0) return null
+
   return (
     <section id="opportunities" className="sec">
       <div className="container">
