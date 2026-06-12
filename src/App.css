@@ -1436,24 +1436,6 @@ a.c-val:hover { color: var(--red); }
   .srv-desc          { -webkit-line-clamp: 2; margin-bottom: .75rem; }
   .srv-more          { opacity: 1; }
 
-  /* compact blog cards on mobile */
-  .blog-img-wrap     { aspect-ratio: 2/1; }
-  .blog-body         { padding: .875rem 1rem 1rem; gap: .4rem; }
-  .blog-title        {
-    font-size: .95rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .blog-excerpt      {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex: none;
-  }
-  .blog-card .srv-more { opacity: 1; font-size: .8rem; }
 
   .hero-arr--l { left: .75rem; }
   .hero-arr--r { right: .75rem; }
@@ -1492,7 +1474,7 @@ a.c-val:hover { color: var(--red); }
   .dsp-why-grid  { grid-template-columns: 1fr; }
   .dsp-opp-slider .dsp-opp-card { flex: 0 0 calc((100% - 1.5rem) / 2); min-width: calc((100% - 1.5rem) / 2); }
   .blog-grid .blog-card { flex: 0 0 calc(100vw - 5rem); min-width: calc(100vw - 5rem); }
-  .opp-grid .opp-card  { flex: 0 0 calc((100% - 1.75rem) / 2); min-width: calc((100% - 1.75rem) / 2); }
+  .opp-grid .opp-card  { flex: 0 0 calc(100vw - 5rem); min-width: calc(100vw - 5rem); }
   .adm-shell     { flex-direction: column; }
   .adm-sidebar   { width: 100%; flex-direction: row; flex-wrap: wrap; gap: .75rem; padding: 1rem; }
   .adm-nav       { flex-direction: row; flex-wrap: wrap; }
@@ -1618,9 +1600,11 @@ a.c-val:hover { color: var(--red); }
   flex-wrap: nowrap;
   gap: 1.75rem;
 }
-.opp-grid .opp-card {
-  flex: 0 0 calc((100% - 3.5rem) / 3);
-  min-width: calc((100% - 3.5rem) / 3);
+@media (min-width: 561px) {
+  .opp-grid .opp-card {
+    flex: 0 0 calc((100% - 3.5rem) / 3);
+    min-width: calc((100% - 3.5rem) / 3);
+  }
 }
 .opp-card {
   background: var(--white);
@@ -2275,4 +2259,46 @@ a.c-val:hover { color: var(--red); }
 }
 .form-feedback--ok  { background: #e6f9f0; color: #1a7a4a; border: 1px solid #a3dfc0; }
 .form-feedback--err { background: #fdecea; color: #c0392b; border: 1px solid #f5a9a3; }
+
+/* ─── MOBILE CARD OVERRIDES (must stay at end of file to win cascade) ──────── */
+@media (max-width: 768px) {
+  /* blog cards */
+  .blog-img-wrap  { aspect-ratio: 2/1; }
+  .blog-body      { padding: .875rem 1rem 1rem; gap: .4rem; }
+  .blog-title     {
+    font-size: .95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .blog-excerpt   {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: none;
+  }
+  .blog-card .srv-more { opacity: 1; font-size: .8rem; }
+
+  /* opportunity cards */
+  .opp-card       { padding: 1rem; gap: .65rem; }
+  .opp-title      {
+    font-size: .95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .opp-desc       {
+    font-size: .83rem;
+    flex: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .opp-highlights { display: none; }
+  .opp-financials { padding-top: .5rem; }
+}
 .form-submit:disabled { opacity: .65; cursor: not-allowed; }
