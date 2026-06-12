@@ -2350,11 +2350,21 @@ a.c-val:hover { color: var(--red); }
 }
 .form-submit:disabled { opacity: .65; cursor: not-allowed; }
 
-/* ─── SECTORS — mobile 2-column grid ────────────────────────────── */
+/* ─── SECTORS — mobile 2-up auto-slider ─────────────────────────── */
 @media (max-width: 768px) {
   .sec-grid {
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     gap: .75rem;
+  }
+  .sec-grid::-webkit-scrollbar { display: none; }
+  .sec-tile {
+    flex: 0 0 calc(50% - .375rem);
+    scroll-snap-align: start;
   }
 }
 

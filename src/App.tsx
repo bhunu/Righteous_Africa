@@ -711,6 +711,31 @@ export default function App() {
   const dspWhyRef = useRef<HTMLDivElement>(null)
   useAutoScroll(dspWhyRef, '.dsp-why-card', 0)
 
+  const sectorRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = sectorRef.current
+    if (!el) return
+    let paused = false
+    const onEnter = () => { paused = true }
+    const onLeave = () => { paused = false }
+    el.addEventListener('mouseenter', onEnter)
+    el.addEventListener('mouseleave', onLeave)
+    const id = setInterval(() => {
+      if (paused) return
+      const maxScroll = el.scrollWidth - el.clientWidth
+      if (el.scrollLeft >= maxScroll - 1) {
+        el.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        el.scrollBy({ left: el.clientWidth, behavior: 'smooth' })
+      }
+    }, 4000)
+    return () => {
+      clearInterval(id)
+      el.removeEventListener('mouseenter', onEnter)
+      el.removeEventListener('mouseleave', onLeave)
+    }
+  }, [])
+
 const [srvExp,    setSrvExp]    = useState<Set<string>>(new Set())
   const [dspSrvExp, setDspSrvExp] = useState<Set<string>>(new Set())
   const [dspOppExp, setDspOppExp] = useState<Set<number>>(new Set())
@@ -1053,7 +1078,7 @@ const [srvExp,    setSrvExp]    = useState<Set<string>>(new Set())
             <h2 className="rae-h2">Sectors We Support</h2>
             <p className="sec-lead">We partner with businesses across diverse, high-impact industries driving Africa's economic transformation.</p>
           </div>
-          <div className="sec-grid">
+          <div className="sec-grid" ref={sectorRef}>
             {SECTORS.map(s => (
               <div key={s} className="sec-tile">
                 <div className="sec-tile-dot" />
