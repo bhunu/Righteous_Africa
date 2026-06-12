@@ -3,7 +3,7 @@ import './App.css'
 import BlogSection from './components/BlogSection'
 import OpportunitiesSection from './components/OpportunitiesSection'
 import AdminPanel from './components/AdminPanel'
-import type { SiteContent } from './data/types'
+import type { SiteContent, Package } from './data/types'
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
@@ -155,8 +155,9 @@ const SERVICE_ICONS: Record<string, ReactNode> = {
   ),
 }
 
-const PACKAGES = [
+const DEFAULT_PACKAGES: Package[] = [
   {
+    id: 'pkg-just-start',
     name: 'Just Start Pack',
     price: '$220',
     period: 'Once Off',
@@ -170,6 +171,7 @@ const PACKAGES = [
     ],
   },
   {
+    id: 'pkg-startup',
     name: 'Startup Package',
     price: '$250',
     period: '/ Month',
@@ -182,6 +184,7 @@ const PACKAGES = [
     ],
   },
   {
+    id: 'pkg-sme',
     name: 'SME Growth Package',
     price: '$400',
     period: '/ Month',
@@ -196,6 +199,7 @@ const PACKAGES = [
     ],
   },
   {
+    id: 'pkg-corporate',
     name: 'Corporate Finance',
     price: '$1,000',
     period: '/ Month',
@@ -630,7 +634,7 @@ function ContactForm() {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
-const EMPTY_CONTENT: SiteContent = { blogPosts: [], opportunities: [] }
+const EMPTY_CONTENT: SiteContent = { blogPosts: [], opportunities: [], packages: [] }
 
 export default function App() {
   const [siteContent, setSiteContent] = useState<SiteContent>(EMPTY_CONTENT)
@@ -1013,8 +1017,8 @@ export default function App() {
               </p>
             </div>
 
-            {PACKAGES.map(pkg => (
-              <div key={pkg.name} className={`pkg-card${pkg.featured ? ' pkg-card--star' : ''}`}>
+            {(siteContent.packages?.length ? siteContent.packages : DEFAULT_PACKAGES).map(pkg => (
+              <div key={pkg.id} className={`pkg-card${pkg.featured ? ' pkg-card--star' : ''}`}>
                 {pkg.featured && <div className="pkg-badge">Most Popular</div>}
                 <div className="pkg-head">
                   <h3 className="pkg-name">{pkg.name}</h3>

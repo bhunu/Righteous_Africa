@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactNode } from 'react'
-import type { SiteContent, BlogPost, Opportunity } from '../data/types'
+import type { SiteContent, BlogPost, Opportunity, Package } from '../data/types'
 
 // ─── PIN helpers ─────────────────────────────────────────────────────────────
 
@@ -438,6 +438,152 @@ function OppManager({ opportunities, onChange }: { opportunities: Opportunity[];
   )
 }
 
+// ─── Package manager ─────────────────────────────────────────────────────────
+
+const emptyPkg = (): Omit<Package, 'id'> => ({
+  name: '', price: '$', period: '/ Month', featured: false, features: [''],
+})
+
+function PackageManager({ packages, onChange }: { packages: Package[]; onChange: (p: Package[]) => void }) {
+  const [editing, setEditing] = useState<Package | null>(null)
+  const [isNew, setIsNew] = useState(false)
+  const [form, setForm] = useState(emptyPkg())
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+
+  function openNew() { setForm(emptyPkg()); setIsNew(true); setEditing({ id: '', ...emptyPkg() }) }
+  function openEdit(p: Package) { setForm({ ...p, features: [...p.features] }); setIsNew(false); setEditing(p) }
+  function closeForm() { setEditing(null) }
+
+  function saveForm() {
+    if (!form.name.trim() || !form.price.trim()) return
+    const clean = { ...form, features: form.features.filter(f => f.trim()) }
+    if (isNew) {
+      onChange([...packages, { ...clean, id: crypto.randomUUID() }])
+    } else if (editing) {
+      onChange(packages.map(p => p.id === editing.id ? { ...clean, id: editing.id } : p))
+    }
+    closeForm()
+  }
+
+  function remove(id: string) {
+    onChange(packages.filter(p => p.id !== id))
+    setPendingDeleteId(null)
+  }
+
+  function toggleFeatured(id: string) {
+    onChange(packages.map(p => ({ ...p, featured: p.id === id ? !p.featured : false })))
+  }
+
+  const f = (k: keyof typeof form, v: string | boolean) => setForm(prev => ({ ...prev, [k]: v }))
+
+  function setFeature(i: number, v: string) {
+    setForm(prev => { const feats = [...prev.features]; feats[i] = v; return { ...prev, features: feats } })
+  }
+  function addFeature() { setForm(prev => ({ ...prev, features: [...prev.features, ''] })) }
+  function removeFeature(i: number) {
+    setForm(prev => ({ ...prev, features: prev.features.filter((_, idx) => idx !== i) }))
+  }
+
+  return (
+    <div className="adm-manager">
+      <div className="adm-manager-head">
+        <h3>Pricing Packages <span className="adm-count">{packages.length}</span></h3>
+        <button className="adm-btn-add" onClick={openNew}>+ New Package</button>
+      </div>
+      <p className="adm-settings-note" style={{ marginBottom: '1rem' }}>
+        Packages shown in the Pricing section. If none are saved here, the site shows the built-in defaults. Mark one as "Most Popular" using the ★ button.
+      </p>
+
+      {packages.length === 0 && (
+        <p className="adm-empty">No custom packages yet — the site is showing built-in defaults. Add one to override them.</p>
+      )}
+
+      <div className="adm-list">
+        {packages.map(p => (
+          <div key={p.id} className="adm-list-item">
+            <div className="adm-list-info">
+              <div className="adm-list-title">{p.name}</div>
+              <div className="adm-list-meta">
+                <span className="adm-tag-sm">{p.price} {p.period}</span>
+                {p.featured && <span className="adm-pub-badge adm-pub-badge--on">Most Popular</span>}
+                <span>{p.features.filter(f => f.trim()).length} features</span>
+              </div>
+            </div>
+            <div className="adm-list-actions">
+              {pendingDeleteId === p.id ? (
+                <>
+                  <span style={{ fontSize: '.8rem', color: 'var(--mid)' }}>Delete?</span>
+                  <button className="adm-act adm-act--del" onClick={() => remove(p.id)}>Yes</button>
+                  <button className="adm-act" onClick={() => setPendingDeleteId(null)}>No</button>
+                </>
+              ) : (
+                <>
+                  <button className="adm-act" onClick={() => toggleFeatured(p.id)}
+                    title={p.featured ? 'Remove Most Popular' : 'Mark as Most Popular'}>
+                    {p.featured ? '★' : '☆'}
+                  </button>
+                  <button className="adm-act" onClick={() => openEdit(p)}>Edit</button>
+                  <button className="adm-act adm-act--del" onClick={() => setPendingDeleteId(p.id)}>Delete</button>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {editing !== null && (
+        <Modal title={isNew ? 'New Package' : 'Edit Package'} onClose={closeForm}>
+          <div className="adm-form">
+            <div className="adm-fg">
+              <label>Package Name *</label>
+              <input value={form.name} onChange={e => f('name', e.target.value)} placeholder="e.g. Startup Package" />
+            </div>
+            <div className="adm-row2">
+              <div className="adm-fg">
+                <label>Price *</label>
+                <input value={form.price} onChange={e => f('price', e.target.value)} placeholder="e.g. $250" />
+              </div>
+              <div className="adm-fg">
+                <label>Period</label>
+                <select value={form.period} onChange={e => f('period', e.target.value)}>
+                  <option>/ Month</option>
+                  <option>Once Off</option>
+                  <option>/ Year</option>
+                  <option>/ Quarter</option>
+                </select>
+              </div>
+            </div>
+            <div className="adm-fg">
+              <label>Features (what's included)</label>
+              {form.features.map((feat, i) => (
+                <div key={i} className="adm-highlight-row">
+                  <input value={feat} onChange={e => setFeature(i, e.target.value)} placeholder={`Feature ${i + 1}`} />
+                  {form.features.length > 1 && (
+                    <button className="adm-hl-del" onClick={() => removeFeature(i)} type="button">✕</button>
+                  )}
+                </div>
+              ))}
+              <button className="adm-hl-add" onClick={addFeature} type="button">+ Add feature</button>
+            </div>
+            <div className="adm-check-row">
+              <label className="adm-check">
+                <input type="checkbox" checked={form.featured} onChange={e => f('featured', e.target.checked)} />
+                Mark as "Most Popular"
+              </label>
+            </div>
+            <div className="adm-form-actions">
+              <button className="adm-btn-save" onClick={saveForm} disabled={!form.name.trim() || !form.price.trim()}>
+                {isNew ? 'Create Package' : 'Save Changes'}
+              </button>
+              <button className="adm-btn-cancel" onClick={closeForm}>Cancel</button>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  )
+}
+
 // ─── Settings panel ───────────────────────────────────────────────────────────
 
 function SettingsPanel() {
@@ -681,7 +827,7 @@ function PublishModal({
 
 // ─── Admin Panel ──────────────────────────────────────────────────────────────
 
-type Tab = 'blog' | 'opportunities' | 'settings'
+type Tab = 'blog' | 'opportunities' | 'packages' | 'settings'
 
 interface Props {
   content: SiteContent
@@ -750,6 +896,9 @@ export default function AdminPanel({ content, onContentChange, onExit }: Props) 
             { key: 'opportunities', label: 'Opportunities', icon: (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
             )},
+            { key: 'packages', label: 'Packages', icon: (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            )},
             { key: 'settings', label: 'Settings', icon: (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
             )},
@@ -793,6 +942,12 @@ export default function AdminPanel({ content, onContentChange, onExit }: Props) 
           <OppManager
             opportunities={content.opportunities}
             onChange={opps => updateContent({ ...content, opportunities: opps })}
+          />
+        )}
+        {tab === 'packages' && (
+          <PackageManager
+            packages={content.packages ?? []}
+            onChange={pkgs => updateContent({ ...content, packages: pkgs })}
           />
         )}
         {tab === 'settings' && <SettingsPanel />}

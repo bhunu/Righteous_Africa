@@ -23,7 +23,17 @@ export interface Opportunity {
   highlights: string[]
 }
 
+export interface Package {
+  id: string
+  name: string
+  price: string
+  period: string
+  featured: boolean
+  features: string[]
+}
+
 export interface SiteContent {
   blogPosts: BlogPost[]
   opportunities: Opportunity[]
+  packages: Package[]
 }
