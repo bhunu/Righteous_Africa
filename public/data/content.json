@@ -86,5 +86,19 @@
         "DFI co-funding available for qualifying investors"
       ]
     }
+  ],
+  "packages": [
+    {
+      "name": "On Promotion",
+      "price": "$800",
+      "period": "Once Off",
+      "featured": false,
+      "features": [
+        "company reg",
+        "huhu",
+        "huhuyyyffr"
+      ],
+      "id": "2e7c1020-cd5d-4666-ba42-5aed02c4d45c"
+    }
   ]
 }
