@@ -19,7 +19,7 @@ app.use(helmet({
       styleSrc:       ["'self'", "'unsafe-inline'"],
       imgSrc:         ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://*.unsplash.com"],
       fontSrc:        ["'self'", "data:"],
-      connectSrc:     ["'self'"],
+      connectSrc:     ["'self'", "https://api.github.com"],
       frameSrc:       ["'none'"],
       objectSrc:      ["'none'"],
       upgradeInsecureRequests: [],
