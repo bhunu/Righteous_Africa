@@ -1,5 +1,4 @@
 ---
 deployment:
   tasks:
-    - npm install --omit=dev
-    - npm run build
+    - /usr/local/bin/npm install --omit=dev
