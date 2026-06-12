@@ -708,7 +708,7 @@ export default function App() {
   const [dspSrvExp, setDspSrvExp] = useState<Set<string>>(new Set())
   const [dspOppExp, setDspOppExp] = useState<Set<number>>(new Set())
 
-  function toggle<T>(set: Set<T>, setFn: React.Dispatch<React.SetStateAction<Set<T>>>, key: T) {
+  function toggle<T>(setFn: React.Dispatch<React.SetStateAction<Set<T>>>, key: T) {
     setFn(prev => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n })
   }
 
@@ -804,7 +804,7 @@ export default function App() {
                   <div className="srv-icon">{SERVICE_ICONS[s.id]}</div>
                   <h3 className="srv-title">{s.title}</h3>
                   <p className="srv-desc">{s.desc}</p>
-                  <button className="srv-more" onClick={() => toggle(srvExp, setSrvExp, s.id)}>
+                  <button className="srv-more" onClick={() => toggle(setSrvExp, s.id)}>
                     {srvExp.has(s.id) ? 'Show less' : 'Read more'}
                     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
                   </button>
@@ -906,7 +906,7 @@ export default function App() {
                     <div className="srv-icon">{DIASPORA_ICONS[s.id]}</div>
                     <h3 className="srv-title">{s.title}</h3>
                     <p className="srv-desc">{s.desc}</p>
-                    <button className="srv-more" onClick={() => toggle(dspSrvExp, setDspSrvExp, s.id)}>
+                    <button className="srv-more" onClick={() => toggle(setDspSrvExp, s.id)}>
                       {dspSrvExp.has(s.id) ? 'Show less' : 'Read more'}
                       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="13" height="13" aria-hidden="true"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
                     </button>
@@ -949,7 +949,7 @@ export default function App() {
                   <div className="dsp-opp-icon">{DIASPORA_OPP_ICONS[i]}</div>
                   <h4 className="dsp-opp-title">{o.title}</h4>
                   <p className="dsp-opp-desc">{o.desc}</p>
-                  <button className="dsp-opp-more" onClick={() => toggle(dspOppExp, setDspOppExp, i)}>
+                  <button className="dsp-opp-more" onClick={() => toggle(setDspOppExp, i)}>
                     {dspOppExp.has(i) ? 'Show less' : 'Read more'}
                     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
                       strokeLinecap="round" strokeLinejoin="round" width="12" height="12" aria-hidden="true">
