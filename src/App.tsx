@@ -941,6 +941,13 @@ export default function App() {
                   <div className="dsp-opp-icon">{DIASPORA_OPP_ICONS[i]}</div>
                   <h4 className="dsp-opp-title">{o.title}</h4>
                   <p className="dsp-opp-desc">{o.desc}</p>
+                  <a href="#contact" className="dsp-opp-more">
+                    Read more
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"
+                      strokeLinecap="round" strokeLinejoin="round" width="12" height="12" aria-hidden="true">
+                      <path d="M3 8h10M8 3l5 5-5 5"/>
+                    </svg>
+                  </a>
                 </div>
               ))}
             </div>
