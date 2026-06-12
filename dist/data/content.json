@@ -86,5 +86,65 @@
         "DFI co-funding available for qualifying investors"
       ]
     }
+  ],
+  "packages": [
+    {
+      "id": "5e9ab673-5559-48cc-8ab5-698e95bd7221",
+      "name": "Just Start Pack",
+      "price": "$220",
+      "period": "Once Off",
+      "featured": true,
+      "features": [
+        "Company profile + reviews",
+        "Logo design + revisions",
+        "Email registration",
+        "Business chip card",
+        "2 startup receipt books"
+      ]
+    },
+    {
+      "id": "f8ed52c4-a371-4e32-8d60-3c28895890f3",
+      "name": "Startup Package",
+      "price": "$250",
+      "period": "/ Month",
+      "featured": false,
+      "features": [
+        "Basic accounting",
+        "ZIMRA compliance reminders & support",
+        "Payroll support",
+        "Monthly management accounts"
+      ]
+    },
+    {
+      "id": "bfc443f5-7fb9-417b-b591-0bc0f5dba1a6",
+      "name": "SME Growth Package",
+      "price": "$400",
+      "period": "/ Month",
+      "featured": false,
+      "features": [
+        "Accounting",
+        "Tax advisory",
+        "Cash flow forecasting",
+        "Budgeting",
+        "Business advisory meetings",
+        "Monthly reports"
+      ]
+    },
+    {
+      "id": "4d90a27a-849a-4ccd-b787-905fb7bc271c",
+      "name": "Corporate Finance",
+      "price": "$1,000",
+      "period": "/ Month",
+      "featured": false,
+      "features": [
+        "Accounting",
+        "Financial modeling",
+        "Investor readiness",
+        "Fundraising support",
+        "Board reporting",
+        "Expansion strategy",
+        "Monthly reports"
+      ]
+    }
   ]
 }
