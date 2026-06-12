@@ -640,14 +640,27 @@ export default function App() {
   const [siteContent, setSiteContent] = useState<SiteContent>(EMPTY_CONTENT)
   const [adminMode, setAdminMode] = useState(false)
 
-  // Navigate to /#admin to open the admin panel
+  // Open admin panel: double-tap Enter (within 600 ms) or navigate to /#admin
   useEffect(() => {
     const checkHash = () => {
       if (window.location.hash === '#admin') setAdminMode(true)
     }
     checkHash()
     window.addEventListener('hashchange', checkHash)
-    return () => window.removeEventListener('hashchange', checkHash)
+
+    let lastEnter = 0
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter') return
+      const now = Date.now()
+      if (now - lastEnter < 600) setAdminMode(true)
+      lastEnter = now
+    }
+    document.addEventListener('keydown', onKey)
+
+    return () => {
+      window.removeEventListener('hashchange', checkHash)
+      document.removeEventListener('keydown', onKey)
+    }
   }, [])
 
   useEffect(() => {
